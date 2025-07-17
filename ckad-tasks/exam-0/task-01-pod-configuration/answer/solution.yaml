@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: exam-0-task-01
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: example-config
+  namespace: exam-0-task-01
+data:
+  APP_MESSAGE: "Hello from ConfigMap!"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-demo
+  namespace: exam-0-task-01
+spec:
+  containers:
+    - name: demo-container
+      image: busybox
+      command: ["sh", "-c", "env | grep APP_MESSAGE && sleep 3600"]
+      env:
+        - name: APP_MESSAGE
+          valueFrom:
+            configMapKeyRef:
+              name: example-config
+              key: APP_MESSAGE
