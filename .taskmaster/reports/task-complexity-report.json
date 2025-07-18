@@ -1,0 +1,133 @@
+{
+	"meta": {
+		"generatedAt": "2025-07-17T08:11:20.621Z",
+		"tasksAnalyzed": 15,
+		"totalTasks": 15,
+		"analysisCount": 15,
+		"thresholdScore": 5,
+		"projectName": "Taskmaster",
+		"usedResearch": true
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 1,
+			"taskTitle": "Define and Implement Core Directory Structure",
+			"complexityScore": 1,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "This task is atomic and does not require expansion. It can be completed with a single script or command.",
+			"reasoning": "This is a straightforward, one-time setup task that involves creating a predefined set of directories. It requires no complex logic or scripting and can be accomplished with basic shell commands, making it very low complexity."
+		},
+		{
+			"taskId": 2,
+			"taskTitle": "Create Standardized Task Description Template",
+			"complexityScore": 2,
+			"recommendedSubtasks": 2,
+			"expansionPrompt": "Expand this task into two subtasks: 1. Draft the content and structure for the `task-description.md` template, including all required sections and explanatory comments. 2. Implement the draft as a final Markdown file with appropriate formatting and placeholder examples.",
+			"reasoning": "Low complexity as it involves creating a static Markdown file. However, it requires careful thought to ensure the template is clear, comprehensive, and practical for all future tasks, justifying a minimal breakdown."
+		},
+		{
+			"taskId": 3,
+			"taskTitle": "Develop Basic `prep/setup.sh` Script Template",
+			"complexityScore": 4,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Expand this task into three subtasks: 1. Design the script logic, including parameterization for namespace and resource files, and ensure idempotency using `kubectl apply`. 2. Implement the `setup.sh` shell script template with clear comments and placeholders. 3. Create and execute a test plan in a minikube environment to verify functionality and idempotency.",
+			"reasoning": "This task has moderate complexity as it requires shell scripting, knowledge of `kubectl`, and an understanding of idempotency to create a reusable and robust template. It's more than a static file and needs proper design and testing."
+		},
+		{
+			"taskId": 4,
+			"taskTitle": "Develop Standard `answer/validation.sh` Script Template",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Expand this task into four subtasks: 1. Design the script's structure, including functions for resource validation, formatted output (success/failure), and cleanup. 2. Implement the script template in shell, focusing on idempotency and clear, parameterized checks. 3. Implement a comprehensive cleanup routine to remove all task-specific resources. 4. Test the template against a sample task with both a correct and an incorrect solution to ensure accurate reporting.",
+			"reasoning": "This is a key component requiring solid shell scripting. It must be robust, provide clear user feedback, handle various failure modes, and include cleanup. The logic is significantly more complex than the setup script, involving parsing `kubectl` output and multiple conditional checks."
+		},
+		{
+			"taskId": 5,
+			"taskTitle": "Create Foundational Task: Pod with ConfigMap",
+			"complexityScore": 5,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Expand this task into four subtasks, one for each part of the task structure: 1. Create the `zadanie/task-description.md` file using the standard template. 2. Implement the `prep/setup.sh` script and any necessary initial resource YAML files. 3. Implement the `answer/solution.yaml` and the corresponding `answer/validation.sh` script. 4. Conduct a full run-through to test the entire user flow from setup to validation.",
+			"reasoning": "This is the first end-to-end implementation, integrating the directory structure and all previously created templates. It requires creating content for all parts of a task (prep, zadanie, answer), making it a moderately complex integration effort that serves as a blueprint for subsequent tasks."
+		},
+		{
+			"taskId": 6,
+			"taskTitle": "Create Foundational Task: Deployment Management and Scaling",
+			"complexityScore": 5,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Expand this task into four subtasks: 1. Write the `task-description.md` for the Deployment scaling task. 2. Create the `prep/setup.sh` script. 3. Develop the `answer/solution.yaml` and the `validation.sh` script to check replica count and image. 4. Perform a full end-to-end test of the task.",
+			"reasoning": "Similar in complexity to the first foundational task. While the process is now familiar, it involves a different core Kubernetes object (Deployment) with its own specific validation requirements, such as checking replica counts and rollout status."
+		},
+		{
+			"taskId": 7,
+			"taskTitle": "Create Foundational Task: Service Exposure",
+			"complexityScore": 5,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Expand this task into four subtasks: 1. Write the `task-description.md` for the Service exposure task. 2. Create the `prep/setup.sh` to deploy the prerequisite Deployment. 3. Develop the `answer/solution.yaml` and the `validation.sh` script using `curl` to test connectivity. 4. Perform a full end-to-end test.",
+			"reasoning": "This task follows the established pattern but introduces networking concepts (Services) and a new validation method (`curl`). The complexity remains moderate as it requires careful configuration of selectors, ports, and target ports to function correctly."
+		},
+		{
+			"taskId": 8,
+			"taskTitle": "Create Advanced Task: Multi-Container Pod (Sidecar Pattern)",
+			"complexityScore": 7,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Expand this task into four subtasks: 1. Write the `task-description.md` for the sidecar pattern task. 2. Create the `prep/setup.sh` script. 3. Develop the `answer/solution.yaml` with the multi-container spec and the `validation.sh` script to check both containers and the shared volume. 4. Perform a full end-to-end test.",
+			"reasoning": "This task is more complex because it involves a multi-container pod spec and a shared volume, which is a more advanced pattern. The validation logic is also more intricate, likely requiring `kubectl exec` to verify the interaction between containers."
+		},
+		{
+			"taskId": 9,
+			"taskTitle": "Create Troubleshooting Task: Broken Deployment",
+			"complexityScore": 7,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Expand this task into four subtasks: 1. Design a specific, non-obvious failure mode (e.g., incorrect image name, failing probe) and write the `task-description.md`. 2. Implement the `prep/setup.sh` and the broken resource manifest. 3. Create the `answer/` solution showing the fix and a `validation.sh` that confirms the Deployment is now healthy. 4. Test the entire troubleshooting and validation flow.",
+			"reasoning": "High complexity due to the nature of troubleshooting. It requires carefully engineering a specific failure mode in the setup script and ensuring the validation script correctly identifies the fixed state. This is more difficult than validating a simple resource creation task."
+		},
+		{
+			"taskId": 10,
+			"taskTitle": "Create Advanced Networking Task: NetworkPolicy",
+			"complexityScore": 8,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Expand this task into five subtasks: 1. Design the multi-pod architecture (e.g., 'frontend', 'backend', 'unrelated') for the test scenario. 2. Write the `task-description.md`. 3. Implement the `prep/setup.sh` to create all required Deployments and Services. 4. Create the `answer/` NetworkPolicy solution. 5. Implement a `validation.sh` script that tests connectivity from an allowed pod (should succeed) and from a disallowed pod (should fail).",
+			"reasoning": "This is a high-complexity task. NetworkPolicies are conceptually difficult, and setting up a valid test environment with multiple interacting components is challenging. The validation script must be sophisticated enough to test both allowed and blocked traffic paths accurately."
+		},
+		{
+			"taskId": 11,
+			"taskTitle": "Create Task Requiring Context Switching",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Expand this task into four subtasks: 1. Write the `task-description.md` that clearly requires actions in two different namespaces. 2. Implement `prep/setup.sh` to create both namespaces and initial resources. 3. Create the `answer/` solution and a `validation.sh` that explicitly checks resources in both namespaces. 4. Perform a full end-to-end test.",
+			"reasoning": "The complexity here comes not from a single difficult Kubernetes object, but from the operational requirement to manage resources across multiple namespaces. The validation script must also be written to handle multiple contexts or specify namespaces for every `kubectl` command."
+		},
+		{
+			"taskId": 12,
+			"taskTitle": "Create Security Task: RBAC and ServiceAccount",
+			"complexityScore": 8,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Expand this task into four subtasks: 1. Define the specific, limited permissions for the Role and write the `task-description.md`. 2. Implement the `prep/setup.sh`. 3. Create the `answer/` solution YAMLs (ServiceAccount, Role, RoleBinding) and the `validation.sh` script. 4. Implement validation using `kubectl auth can-i` to verify that intended permissions are granted and others are correctly denied.",
+			"reasoning": "High complexity. RBAC involves understanding the interplay between multiple resources (ServiceAccount, Role, RoleBinding). Scripting the validation using `kubectl auth can-i` and correctly interpreting its output for both allowed and denied permissions is challenging."
+		},
+		{
+			"taskId": 13,
+			"taskTitle": "Create Task with Custom Image Requirement",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Expand this task into four subtasks: 1. Create the simple application source code and the `Dockerfile`. 2. Write the `task-description.md`, including clear instructions on how to build the image and load it into the local cluster (e.g., using minikube). 3. Create the `answer/` solution and a `validation.sh` script. 4. Test the full build-and-deploy workflow.",
+			"reasoning": "This task's complexity comes from adding an external build step (`docker build`) to the workflow, which is outside the typical `kubectl` flow. It requires the user's environment to be set up for this and complicates the overall task execution."
+		},
+		{
+			"taskId": 14,
+			"taskTitle": "Create Multi-Step Task: Helm Deployment and Rollback",
+			"complexityScore": 8,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Expand this task into five subtasks: 1. Create a basic Helm chart for a simple application. 2. Create two values files: one for a successful deployment and one that will cause the upgrade to fail. 3. Write the `task-description.md` detailing the install-upgrade-rollback sequence. 4. Develop a `validation.sh` script that checks `helm history` and the final state of the deployment. 5. Test the complete user journey.",
+			"reasoning": "High complexity due to the multi-step nature and the introduction of a new tool, Helm. The validation is also complex, as it needs to inspect the Helm release history in addition to the state of the Kubernetes resources, making it a challenging task to create and validate."
+		},
+		{
+			"taskId": 15,
+			"taskTitle": "Finalize and Document `exam-0`",
+			"complexityScore": 9,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Expand this into five subtasks: 1. Develop a peer-review checklist covering task clarity, solution correctness, and validation script robustness. 2. Conduct peer reviews for all tasks in `exam-0`. 3. Perform a full, timed end-to-end test of the entire `exam-0` by a team member who did not create the tasks. 4. Triage and address all issues found during reviews and testing. 5. Finalize the top-level README and documentation for `exam-0`.",
+			"reasoning": "Very high complexity due to its broad scope. It is a capstone task that depends on all other `exam-0` tasks. It requires coordination, peer review, holistic testing, and documentation, making it a significant project management and quality assurance effort rather than a simple implementation task."
+		}
+	]
+}

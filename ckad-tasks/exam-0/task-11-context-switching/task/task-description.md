@@ -33,9 +33,5 @@ kubectl apply -f prep/pod2.yaml
 To validate your solution, run:
 
 ```sh
-kubectl get pods -n ns-one
-kubectl get pods -n ns-two
-kubectl config set-context --current --namespace=ns-two
-kubectl get pods
+./answer/validation.sh
 ```
-Expected result: Both namespaces contain the correct pods, and after changing the default context, `kubectl get pods` shows pods from ns-two.

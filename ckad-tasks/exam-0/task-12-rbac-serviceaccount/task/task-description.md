@@ -33,12 +33,8 @@ kubectl apply -f prep/rolebinding.yaml
 - Pass the validation described below.
 
 ## Validation
-To validate the ServiceAccount permissions, run:
+To validate your solution, run:
 
 ```sh
-kubectl auth can-i get pods --as=system:serviceaccount:exam-0-task-12:limited-access -n exam-0-task-12
-kubectl auth can-i list pods --as=system:serviceaccount:exam-0-task-12:limited-access -n exam-0-task-12
-kubectl auth can-i create pods --as=system:serviceaccount:exam-0-task-12:limited-access -n exam-0-task-12
-kubectl auth can-i delete pods --as=system:serviceaccount:exam-0-task-12:limited-access -n exam-0-task-12
+./answer/validation.sh
 ```
-Expected result: Only `get` and `list` should return `yes`, others should return `no`.

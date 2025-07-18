@@ -34,8 +34,5 @@ You must create `pod.yaml` yourself as part of the solution.
 To validate your solution, run:
 
 ```sh
-kubectl apply -f prep/namespace.yaml
-kubectl apply -f prep/pod.yaml
-kubectl logs sidecar-demo -c sidecar -n exam-0-task-08
+./answer/validation.sh
 ```
-Expected result: The `sidecar` container prints the message written by `main-app`.

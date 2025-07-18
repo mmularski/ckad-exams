@@ -34,14 +34,5 @@ Create the NetworkPolicy manifest as `answer/solution.yaml`.
 To validate your solution, run:
 
 ```sh
-kubectl apply -f prep/namespace.yaml
-kubectl apply -f prep/frontend.yaml
-kubectl apply -f prep/backend.yaml
-kubectl apply -f prep/unrelated.yaml
-kubectl apply -f answer/solution.yaml
-# Test connectivity from frontend to backend (should succeed)
-kubectl exec -n exam-0-task-10 $(kubectl get pod -l app=frontend -n exam-0-task-10 -o jsonpath='{.items[0].metadata.name}') -- wget -qO- http://backend:80
-# Test connectivity from unrelated to backend (should be blocked)
-kubectl exec -n exam-0-task-10 $(kubectl get pod -l app=unrelated -n exam-0-task-10 -o jsonpath='{.items[0].metadata.name}') -- wget -qO- http://backend:80
+./answer/validation.sh
 ```
-Expected result: Only the frontend pod can access the backend on port 80.

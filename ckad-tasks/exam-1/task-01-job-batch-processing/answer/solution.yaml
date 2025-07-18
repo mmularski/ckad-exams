@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: data-processor
+  namespace: exam-1-task-01
+spec:
+  template:
+    spec:
+      containers:
+      - name: processor
+        image: busybox
+        command: ["sh", "-c", "cat /data/input.txt | tr a-z A-Z"]
+        volumeMounts:
+        - name: data-vol
+          mountPath: /data
+      restartPolicy: Never
+      volumes:
+      - name: data-vol
+        configMap:
+          name: data-input
+  backoffLimit: 1

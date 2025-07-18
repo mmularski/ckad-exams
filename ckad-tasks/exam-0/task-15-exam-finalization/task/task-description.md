@@ -24,6 +24,8 @@ Review all files in `prep/` and `answer/` for each task in exam-0. Make sure all
 - Pass the validation described below.
 
 ## Validation
-To validate project completion:
-- Make sure every item in the checklist in `prep/peer-review-checklist.md` is checked off.
-- Check that the README in `answer/README.md` contains a project summary, structure, and usage instructions.
+To validate project completion, run:
+
+```sh
+./answer/validation.sh
+```

@@ -1,0 +1,266 @@
+# CKAD Task Repository - Product Requirements Document
+
+## Overview
+The CKAD Task Repository is a collection of authentic CKAD exam tasks organized in a local folder structure. Each exam contains 15-20 hands-on tasks covering all CKAD curriculum domains, with complete environment preparation scripts, task descriptions, and detailed answer keys.
+
+The product solves the problem of lack of realistic hands-on practice tasks for CKAD preparation. Candidates can locally run tasks on their minikube cluster, work under authentic exam conditions, and verify their solutions against professional answers.
+
+The product's value lies in delivering ready-to-use, high-quality CKAD tasks that can be immediately executed locally without needing to build any additional infrastructure or platforms.
+
+## Core Features
+
+### Task Structure Organization
+- **Multiple Exam Simulations**: Exam folders (0, 1, 2, etc.) each containing 15-20 tasks
+- **Three-Part Task Structure**: prep/ (preparation), zadanie/ (task content), answer/ (solution)
+- **Complete Domain Coverage**: Tasks proportionally distributed according to official CKAD curriculum
+- **Realistic Scenarios**: Tasks based on real production use cases
+- **Difficulty Gradation**: Mix of simple, medium, and complex tasks with appropriate point values
+
+### Environment Preparation (prep/)
+- **Automated Setup Scripts**: setup.sh for preparing namespaces and base resources
+- **YAML Resources**: Ready manifests for ConfigMaps, Secrets, base Deployments
+- **Multi-Context Configuration**: Preparation of different cluster contexts for tasks requiring context switching
+- **Broken Resources**: Intentionally broken configurations for troubleshooting tasks
+- **Custom Images**: Instructions and Dockerfiles for tasks requiring custom images
+
+### Task Content (zadanie/)
+- **Detailed Descriptions**: task-description.md with clear instructions and success criteria
+- **Working Files**: YAMLs to modify, broken configurations to fix
+- **Realistic Context**: Tasks embedded in real business application contexts
+- **Multi-Step Scenarios**: Complex tasks requiring multiple steps and resource interactions
+- **Time Guidelines**: Suggested execution time for each task
+
+### Solutions (answer/)
+- **Complete Solutions**: Complete YAMLs with solutions
+- **Step-by-Step Explanations**: Detailed explanation.md with solution steps
+- **Alternative Approaches**: Different ways to solve the same problem
+- **Validation Scripts**: validation.sh scripts for automated solution verification
+- **Common Mistakes**: Typical errors and how to avoid them
+
+## User Experience
+
+### Primary User Personas
+**CKAD Candidate**: Developer preparing for the exam, needing realistic practice under exam conditions
+
+**Kubernetes Trainer**: Instructor using tasks for student assessment and practical exercises
+
+**Study Group**: Developer communities organizing collaborative CKAD preparation sessions
+
+### Core User Journey
+1. **Repository Setup**: Clone repository, ensure minikube is running
+2. **Exam Selection**: Navigate to exam folder (exam-0/, exam-1/, etc.)
+3. **Task Preparation**: Execute prep/setup.sh to configure environment for specific task
+4. **Task Execution**: Read zadanie/task-description.md and implement solution
+5. **Solution Verification**: Compare work with answer/ folder contents
+6. **Learning Review**: Study explanations and alternative approaches
+7. **Environment Reset**: Clean up and prepare for next task
+
+### Workflow Considerations
+- **Terminal-First Experience**: All work done via kubectl and text editors (vim/nano)
+- **Namespace Isolation**: Each task works in isolated namespaces to prevent conflicts
+- **Context Switching**: Tasks require switching between different cluster contexts
+- **Documentation Access**: Tasks assume access only to kubernetes.io documentation
+- **Time Pressure Simulation**: Tasks designed to be completed within exam time constraints
+
+## Technical Architecture
+
+### Directory Structure
+```
+/ckad-tasks/
+├── exam-0/
+│   ├── task-01-pod-configuration/
+│   │   ├── prep/
+│   │   │   ├── setup.sh
+│   │   │   ├── namespace.yaml
+│   │   │   └── base-configmap.yaml
+│   │   ├── zadanie/
+│   │   │   ├── task-description.md
+│   │   │   ├── broken-pod.yaml
+│   │   │   └── requirements.txt
+│   │   └── answer/
+│   │       ├── solution.yaml
+│   │       ├── explanation.md
+│   │       ├── validation.sh
+│   │       └── alternative-solutions/
+│   ├── task-02-deployment-rollout/
+│   ├── task-03-service-networking/
+│   └── [...15-20 tasks total]
+├── exam-1/
+├── exam-2/
+└── shared/
+    ├── common-scripts/
+    ├── base-images/
+    └── templates/
+```
+
+### Task Categories by CKAD Domain
+**Application Environment, Configuration and Security (25%)**
+- CustomResourceDefinition creation and usage
+- RBAC configuration and ServiceAccount binding
+- ConfigMap and Secret management in pods
+- SecurityContext and Pod Security Standards
+- Resource quotas and limits
+
+**Application Design and Build (20%)**
+- Multi-container pod patterns (sidecar, init containers)
+- Job and CronJob implementation
+- Persistent and ephemeral volume management
+- Container image building and optimization
+
+**Application Deployment (20%)**
+- Deployment strategies and rolling updates
+- Rollback scenarios and version management
+- Helm chart deployment and customization
+- API deprecation handling and migration
+
+**Services and Networking (20%)**
+- Service types configuration (ClusterIP, NodePort, LoadBalancer)
+- Ingress controller setup and rules
+- NetworkPolicy implementation
+- Service discovery and DNS resolution
+
+**Application Observability and Maintenance (15%)**
+- Health probe configuration (liveness, readiness, startup)
+- Log analysis and debugging techniques
+- Performance troubleshooting scenarios
+- Application monitoring setup
+
+### Infrastructure Requirements
+- **Kubernetes Cluster**: minikube with 4GB+ RAM, multi-node capability
+- **Container Runtime**: Docker or containerd
+- **Operating System**: Ubuntu 20.04+ or compatible Linux distribution
+- **Storage**: 10GB+ available disk space for images and volumes
+- **Tools**: kubectl, yq, vim/nano, curl, docker/podman
+
+## Development Roadmap
+
+### Phase 1: Foundation Tasks (Weeks 1-3)
+**Core Task Types**
+- Basic pod creation with ConfigMaps and Secrets
+- Simple deployment management and scaling
+- Service exposure and basic networking
+- Resource limits and namespace management
+- Basic RBAC and ServiceAccount configuration
+
+**Deliverables**
+- exam-0/ with 15 complete tasks covering all domains
+- Standardized prep/ script templates
+- Clear task description format and validation scripts
+- Complete answer keys with explanations
+
+### Phase 2: Advanced Scenarios (Weeks 4-6)
+**Complex Task Types**
+- Multi-container patterns and pod communication
+- Advanced networking with Ingress and NetworkPolicies
+- Troubleshooting broken deployments and services
+- Custom Resource Definitions and operators
+- Helm deployment and customization scenarios
+
+**Deliverables**
+- exam-1/ with 18 tasks including advanced scenarios
+- Broken environment tasks for debugging practice
+- Alternative solution approaches in answer keys
+- Validation scripts for automated checking
+
+### Phase 3: Production Realism (Weeks 7-9)
+**Enterprise Scenarios**
+- Complete application lifecycle management
+- Security hardening and compliance scenarios
+- Performance optimization and monitoring
+- Migration and upgrade scenarios
+- Cross-cluster and multi-context tasks
+
+**Deliverables**
+- exam-2/ and exam-3/ with realistic production scenarios
+- Complex multi-step tasks requiring 15+ minutes
+- Industry-specific use cases (web apps, microservices, data processing)
+- Comprehensive troubleshooting scenarios
+
+## Logical Dependency Chain
+
+### Foundation Layer (Must Build First)
+1. **Basic Task Structure**: Establish prep/zadanie/answer folder pattern
+2. **Simple Prep Scripts**: Namespace creation and basic resource deployment
+3. **Core Task Types**: Pod configuration, basic deployment, simple services
+4. **Answer Key Format**: Standardized solution documentation and validation
+
+### Complexity Layer (Build Upon Foundation)
+1. **Multi-Resource Tasks**: Tasks requiring coordination between multiple Kubernetes objects
+2. **Broken Environment Scenarios**: Debugging and troubleshooting tasks
+3. **Advanced Prep Scripts**: Complex environment setup with multiple contexts
+4. **Alternative Solutions**: Multiple approaches to solving the same problem
+
+### Integration Layer (Advanced Scenarios)
+1. **Cross-Domain Tasks**: Tasks combining multiple CKAD curriculum areas
+2. **Production Scenarios**: Real-world complexity with multiple constraints
+3. **Time-Pressured Tasks**: Complex scenarios designed for exam time limits
+4. **Validation Automation**: Scripts for automated solution verification
+
+### Quality Layer (Polish and Refinement)
+1. **Task Variety**: Multiple tasks for each CKAD objective
+2. **Difficulty Progression**: Gradual complexity increase across tasks
+3. **Documentation Quality**: Clear instructions and comprehensive explanations
+4. **Edge Case Coverage**: Uncommon but exam-relevant scenarios
+
+## Risks and Mitigations
+
+### Technical Challenges
+**Risk**: Tasks requiring specific Kubernetes versions or features
+**Mitigation**: Version compatibility documentation, alternative implementations for different K8s versions
+
+**Risk**: Complex multi-cluster scenarios difficult to simulate locally
+**Mitigation**: Use namespace-based separation and context switching to simulate multi-cluster environments
+
+**Risk**: Custom image requirements causing setup complexity
+**Mitigation**: Provide pre-built images in public registries, include Dockerfile instructions for local building
+
+### Content Quality Risks
+**Risk**: Tasks not reflecting actual exam difficulty or format
+**Mitigation**: Regular validation against official CKAD curriculum, feedback from certified professionals
+
+**Risk**: Outdated scenarios due to Kubernetes evolution
+**Mitigation**: Quarterly review cycle, version tags for different Kubernetes releases
+
+**Risk**: Inconsistent task quality across different domains
+**Mitigation**: Standardized task creation templates, peer review process
+
+### Resource Constraints
+**Risk**: Limited bandwidth for creating comprehensive task library
+**Mitigation**: Focus on quality over quantity, iterative expansion of task library
+
+**Risk**: Maintenance burden for environment scripts
+**Mitigation**: Automated testing of prep scripts, clear documentation for troubleshooting
+
+## Appendix
+
+### Task Point Allocation Guidelines
+- **Simple Tasks (4-5 points)**: Single resource creation or modification
+- **Medium Tasks (6-7 points)**: Multi-step scenarios with resource relationships
+- **Complex Tasks (8+ points)**: Troubleshooting, comprehensive application setup, or advanced configurations
+
+### Validation Script Standards
+- All validation scripts must be idempotent
+- Scripts should check both resource existence and correct configuration
+- Clear success/failure messages with specific feedback
+- Automated cleanup after validation
+
+### Task Description Format
+```markdown
+# Task: [Brief Title] (X points)
+
+## Scenario
+[Real-world context and business requirement]
+
+## Requirements
+- Specific technical requirements
+- Success criteria
+- Resource constraints
+
+## Deliverables
+- What files should be created/modified
+- Expected cluster state after completion
+
+## Notes
+- Hints about common pitfalls
+- References to specific Kubernetes documentation
+```

@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: date-writer
+  namespace: exam-1-task-02
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: writer
+            image: busybox
+            command: ["sh", "-c", "date >> /data/dates.txt"]
+            volumeMounts:
+            - name: data-vol
+              mountPath: /data
+          restartPolicy: OnFailure
+          volumes:
+          - name: data-vol
+            emptyDir: {}

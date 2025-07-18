@@ -32,9 +32,5 @@ Fix the manifest and save the corrected version as `answer/solution.yaml`.
 To validate your solution, run:
 
 ```sh
-kubectl apply -f prep/namespace.yaml
-kubectl apply -f answer/solution.yaml
-kubectl get deployment broken-deployment -n exam-0-task-09
-kubectl get pods -n exam-0-task-09
+./answer/validation.sh
 ```
-Expected result: The Deployment and pod are in Running state, and the image is correct (e.g., `nginx:1.21`).

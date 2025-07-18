@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: encoded-secret
+  namespace: exam-1-task-12
+type: Opaque
+data:
+  ENCODED_MSG: U1VDQ0VTU0ZVTCE=
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secret-advanced-demo
+  namespace: exam-1-task-12
+spec:
+  containers:
+    - name: busybox
+      image: busybox
+      command: ["sh", "-c", "echo $ENCODED_MSG | base64 -d && sleep 3600"]
+      env:
+        - name: ENCODED_MSG
+          valueFrom:
+            secretKeyRef:
+              name: encoded-secret
+              key: ENCODED_MSG

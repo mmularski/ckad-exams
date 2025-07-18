@@ -33,10 +33,5 @@ Make sure you have Helm installed and a chart available (e.g., nginx).
 To validate your solution, run:
 
 ```sh
-helm install myapp nginx --namespace exam-0-task-14 -f prep/values-good.yaml
-helm upgrade myapp nginx --namespace exam-0-task-14 -f prep/values-bad.yaml || echo "Upgrade failed (expected)"
-helm rollback myapp 1 --namespace exam-0-task-14
-helm history myapp --namespace exam-0-task-14
-kubectl get pods -n exam-0-task-14
+./answer/validation.sh
 ```
-Expected result: After rollback, the application works correctly and Helm history shows the rollback.

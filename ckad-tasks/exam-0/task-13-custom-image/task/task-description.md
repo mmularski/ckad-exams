@@ -39,8 +39,5 @@ You must create `pod.yaml` yourself as part of the solution.
 To validate your solution, run:
 
 ```sh
-kubectl apply -f prep/namespace.yaml
-kubectl apply -f prep/pod.yaml
-kubectl logs custom-image-demo -n exam-0-task-13
+./answer/validation.sh
 ```
-Expected result: The Pod prints `Hello from custom image` and remains in Running state.

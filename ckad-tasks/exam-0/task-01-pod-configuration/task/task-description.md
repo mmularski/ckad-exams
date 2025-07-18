@@ -13,8 +13,8 @@ In the `prep/` directory you will find:
 To prepare the environment, run:
 
 ```sh
-cd prep
-./setup.sh namespace.yaml
+       cd prep
+       ./setup.sh namespace.yaml
 ```
 
 You must create `configmap.yaml` and `pod.yaml` yourself as part of the solution.
@@ -35,12 +35,8 @@ You must create `configmap.yaml` and `pod.yaml` yourself as part of the solution
 To validate your solution, run:
 
 ```sh
-kubectl apply -f prep/namespace.yaml
-kubectl apply -f prep/configmap.yaml
-kubectl apply -f prep/pod.yaml
-kubectl logs configmap-demo -n exam-0-task-01
+./answer/validation.sh
 ```
-Expected output: `Hello from ConfigMap!`
 
 ## Notes
 - The Pod should remain in Running state (e.g., use `sleep`).

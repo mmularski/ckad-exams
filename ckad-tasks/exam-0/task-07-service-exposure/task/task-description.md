@@ -31,13 +31,8 @@ You must create `deployment.yaml` and `service.yaml` yourself as part of the sol
 To validate your solution, run:
 
 ```sh
-kubectl apply -f prep/namespace.yaml
-kubectl apply -f prep/deployment.yaml
-kubectl apply -f prep/service.yaml
-kubectl get service web-service -n exam-0-task-07
-kubectl get pods -n exam-0-task-07
+./answer/validation.sh
 ```
-Expected result: The `web-service` exposes the Deployment and the pods are in Running state.
 
 ## Notes
 - You can use `kubectl port-forward` to access the Service if needed.

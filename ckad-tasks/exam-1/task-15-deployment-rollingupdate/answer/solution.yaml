@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rolling-demo
+  namespace: exam-1-task-15
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
+  selector:
+    matchLabels:
+      app: rolling-demo
+  template:
+    metadata:
+      labels:
+        app: rolling-demo
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.22
+          ports:
+            - containerPort: 80

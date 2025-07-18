@@ -1,49 +1,37 @@
 #!/bin/bash
 set -e
 
-# Usage: ./validation.sh [namespace] [resource-type] [resource-name]
-# This script validates the existence and configuration of a Kubernetes resource.
-# It also provides cleanup functionality.
+NAMESPACE=exam-0-task-01
+CONFIGMAP=prep/configmap.yaml
+POD=prep/pod.yaml
+NS_MANIFEST=prep/namespace.yaml
+EXPECTED_MSG="Hello from ConfigMap!"
+POD_NAME=configmap-demo
 
-NAMESPACE="$1"
-RESOURCE_TYPE="$2"
-RESOURCE_NAME="$3"
+# Apply manifests
+kubectl apply -f "$NS_MANIFEST"
+kubectl apply -f "$CONFIGMAP"
+kubectl apply -f "$POD"
 
-if [ -z "$NAMESPACE" ] || [ -z "$RESOURCE_TYPE" ] || [ -z "$RESOURCE_NAME" ]; then
-  echo "Usage: $0 <namespace> <resource-type> <resource-name>"
-  exit 1
-fi
-
-function success() {
-  echo -e "\e[32m[SUCCESS]\e[0m $1"
-}
-
-function failure() {
-  echo -e "\e[31m[FAILURE]\e[0m $1"
-  exit 1
-}
-
-function cleanup() {
-  echo "Cleaning up resources..."
-  kubectl delete $RESOURCE_TYPE $RESOURCE_NAME -n $NAMESPACE --ignore-not-found
-  echo "Cleanup complete."
-}
-
-# Trap for cleanup on exit
-trap cleanup EXIT
-
-# Validation logic
-if ! kubectl get $RESOURCE_TYPE $RESOURCE_NAME -n $NAMESPACE &>/dev/null; then
-  failure "$RESOURCE_TYPE/$RESOURCE_NAME does not exist in namespace $NAMESPACE."
-fi
-
-# Add additional configuration checks here as needed
-# Example: Check if a pod is running
-if [ "$RESOURCE_TYPE" == "pod" ]; then
-  STATUS=$(kubectl get pod $RESOURCE_NAME -n $NAMESPACE -o jsonpath='{.status.phase}')
-  if [ "$STATUS" != "Running" ]; then
-    failure "Pod $RESOURCE_NAME is not running (status: $STATUS)."
+# Wait for pod to be running
+for i in {1..10}; do
+  STATUS=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.status.phase}' 2>/dev/null || echo "")
+  if [ "$STATUS" == "Running" ]; then
+    break
   fi
+  sleep 1
+done
+if [ "$STATUS" != "Running" ]; then
+  echo "[FAIL] Pod $POD_NAME is not running (status: $STATUS)"
+  exit 1
 fi
 
-success "$RESOURCE_TYPE/$RESOURCE_NAME exists and passed validation."
+# Check pod logs for expected message
+LOG=$(kubectl logs "$POD_NAME" -n "$NAMESPACE" 2>/dev/null || true)
+if echo "$LOG" | grep -q "$EXPECTED_MSG"; then
+  echo "[PASS] Found expected message in pod logs."
+  exit 0
+else
+  echo "[FAIL] Expected message not found in pod logs."
+  exit 1
+fi

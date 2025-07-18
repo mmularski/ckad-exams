@@ -32,12 +32,8 @@ You must create `deployment.yaml` yourself as part of the solution.
 To validate your solution, run:
 
 ```sh
-kubectl apply -f prep/namespace.yaml
-kubectl apply -f prep/deployment.yaml
-kubectl get deployment nginx-deployment -n exam-0-task-06
-kubectl get pods -n exam-0-task-06
+./answer/validation.sh
 ```
-Expected result: The Deployment has 3 pods in Running state.
 
 ## Notes
 - You can use `kubectl scale deployment nginx-deployment --replicas=3 -n exam-0-task-06` to scale if needed.
