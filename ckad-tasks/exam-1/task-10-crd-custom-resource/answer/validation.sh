@@ -22,9 +22,21 @@ kubectl get message $CR_NAME -n $NAMESPACE
 # Check spec.text field
 TEXT=$(kubectl get message $CR_NAME -n $NAMESPACE -o jsonpath='{.spec.text}')
 if [ "$TEXT" == "Hello CRD!" ]; then
-  echo "[PASS] Custom resource created and has correct text."
+  echo ""
+  echo "✅ [PASS] Custom resource created and has correct text."
+  echo ""
+
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  kubectl delete message "$CR_NAME" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete crd "$CRD_NAME" --ignore-not-found=true
+  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
+
   exit 0
 else
-  echo "[FAIL] Custom resource text is incorrect."
+  echo ""
+  echo "❌ [FAIL] Custom resource text is incorrect."
+  echo ""
   exit 1
 fi

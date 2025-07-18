@@ -25,7 +25,9 @@ for label in frontend backend unrelated; do
     sleep 1
   done
   if [ "$STATUS" != "Running" ]; then
-    echo "[FAIL] Pod $POD ($label) is not running (status: $STATUS)"
+    echo ""
+    echo "❌ [FAIL] Pod $POD ($label) is not running (status: $STATUS)"
+    echo ""
     exit 1
   fi
   declare "${label^^}_POD=$POD"
@@ -37,9 +39,23 @@ kubectl exec -n $NAMESPACE $FRONTEND_POD -- wget -qO- http://backend:80 && FRONT
 kubectl exec -n $NAMESPACE $UNRELATED_POD -- wget -qO- http://backend:80 && UNRELATED_OK=1 || UNRELATED_OK=0
 
 if [ "$FRONTEND_OK" -eq 1 ] && [ "$UNRELATED_OK" -eq 0 ]; then
-  echo "[PASS] NetworkPolicy works as expected."
+  echo ""
+  echo "✅ [PASS] NetworkPolicy works as expected."
+  echo ""
+
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  kubectl delete networkpolicy allow-frontend-to-backend -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete deployment frontend -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete deployment backend -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete deployment unrelated -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
+
   exit 0
 else
-  echo "[FAIL] NetworkPolicy does not work as expected."
+  echo ""
+  echo "❌ [FAIL] NetworkPolicy does not work as expected."
+  echo ""
   exit 1
 fi

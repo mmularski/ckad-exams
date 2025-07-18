@@ -22,7 +22,9 @@ for i in {1..10}; do
   sleep 2
 done
 if [ "$STATUS" != "Running" ]; then
-  echo "[FAIL] Pod $POD_NAME is not running (status: $STATUS)"
+  echo ""
+  echo "❌ [FAIL] Pod $POD_NAME is not running (status: $STATUS)"
+  echo ""
   exit 1
 fi
 
@@ -33,9 +35,22 @@ LIM_CPU=$(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.spec.containers
 LIM_MEM=$(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.spec.containers[0].resources.limits.memory}')
 
 if [ "$REQ_CPU" == "100m" ] && [ "$REQ_MEM" == "64Mi" ] && [ "$LIM_CPU" == "200m" ] && [ "$LIM_MEM" == "128Mi" ]; then
-  echo "[PASS] Pod has default resource requests and limits."
+  echo ""
+  echo "✅ [PASS] Pod has default resource requests and limits."
+  echo ""
+
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  kubectl delete pod "$POD_NAME" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete limitrange default-limits -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete resourcequota default-quota -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
+
   exit 0
 else
-  echo "[FAIL] Pod does not have correct default resource requests/limits."
+  echo ""
+  echo "❌ [FAIL] Pod does not have correct default resource requests/limits."
+  echo ""
   exit 1
 fi

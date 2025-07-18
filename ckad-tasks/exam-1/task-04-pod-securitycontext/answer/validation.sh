@@ -18,25 +18,40 @@ for i in {1..10}; do
   sleep 2
 done
 if [ "$STATUS" != "Running" ]; then
-  echo "[FAIL] Pod $POD_NAME is not running (status: $STATUS)"
+  echo ""
+  echo "❌ [FAIL] Pod $POD_NAME is not running (status: $STATUS)"
+  echo ""
   exit 1
 fi
 
 # Check pod logs for user id
 LOG=$(kubectl logs "$POD_NAME" -n "$NAMESPACE" 2>/dev/null || true)
 if echo "$LOG" | grep -q "1000"; then
-  echo "[PASS] Pod runs as non-root user."
+  echo "✅ [PASS] Pod runs as non-root user."
 else
-  echo "[FAIL] Pod does not run as non-root user."
+  echo ""
+  echo "❌ [FAIL] Pod does not run as non-root user."
+  echo ""
   exit 1
 fi
 
 # Check securityContext
 SC=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o json | grep readOnlyRootFilesystem)
 if echo "$SC" | grep -q true; then
-  echo "[PASS] Pod has read-only root filesystem."
+  echo ""
+  echo "✅ [PASS] Pod has read-only root filesystem."
+  echo ""
+
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  kubectl delete pod "$POD_NAME" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
+
   exit 0
 else
-  echo "[FAIL] Pod does not have read-only root filesystem."
+  echo ""
+  echo "❌ [FAIL] Pod does not have read-only root filesystem."
+  echo ""
   exit 1
 fi

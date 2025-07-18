@@ -20,9 +20,22 @@ CREATE=$(kubectl auth can-i create pods --as=system:serviceaccount:$NAMESPACE:$S
 DELETE=$(kubectl auth can-i delete pods --as=system:serviceaccount:$NAMESPACE:$SA -n $NAMESPACE)
 
 if [ "$GET" == "yes" ] && [ "$LIST" == "yes" ] && [ "$CREATE" == "no" ] && [ "$DELETE" == "no" ]; then
-  echo "[PASS] ServiceAccount permissions are correct."
+  echo ""
+  echo "✅ [PASS] ServiceAccount permissions are correct."
+  echo ""
+
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  kubectl delete rolebinding limited-access-binding -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete role limited-access-role -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete serviceaccount "$SA" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
+
   exit 0
 else
-  echo "[FAIL] ServiceAccount permissions are incorrect."
+  echo ""
+  echo "❌ [FAIL] ServiceAccount permissions are incorrect."
+  echo ""
   exit 1
 fi

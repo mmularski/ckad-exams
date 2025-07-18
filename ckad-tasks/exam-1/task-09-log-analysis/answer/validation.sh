@@ -20,20 +20,35 @@ for i in {1..10}; do
   sleep 2
 done
 if [ "$STATUS" != "Running" ]; then
-  echo "[FAIL] Pod $POD_NAME is not running (status: $STATUS)"
+  echo ""
+  echo "❌ [FAIL] Pod $POD_NAME is not running (status: $STATUS)"
+  echo ""
   exit 1
 fi
 
 # Check error.txt exists and contains the error line
 if [ ! -f "$ERROR_FILE" ]; then
-  echo "[FAIL] $ERROR_FILE not found."
+  echo ""
+  echo "❌ [FAIL] $ERROR_FILE not found."
+  echo ""
   exit 1
 fi
 
 if grep -Fxq "$EXPECTED" "$ERROR_FILE"; then
-  echo "[PASS] error.txt contains the correct error line."
+  echo ""
+  echo "✅ [PASS] error.txt contains the correct error line."
+  echo ""
+
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  kubectl delete pod "$POD_NAME" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
+
   exit 0
 else
-  echo "[FAIL] error.txt does not contain the correct error line."
+  echo ""
+  echo "❌ [FAIL] error.txt does not contain the correct error line."
+  echo ""
   exit 1
 fi

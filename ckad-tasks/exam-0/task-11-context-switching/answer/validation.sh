@@ -26,7 +26,9 @@ for ns in $NS1 $NS2; do
     sleep 1
   done
   if [ "$STATUS" != "Running" ]; then
-    echo "[FAIL] Pod in namespace $ns is not running (status: $STATUS)"
+    echo ""
+    echo "❌ [FAIL] Pod in namespace $ns is not running (status: $STATUS)"
+    echo ""
     exit 1
   fi
 done
@@ -35,9 +37,22 @@ done
 kubectl config set-context --current --namespace=$NS2
 PODS=$(kubectl get pods --no-headers | wc -l)
 if [ "$PODS" -ge 1 ]; then
-  echo "[PASS] Context switch and pod check successful."
+  echo ""
+  echo "✅ [PASS] Context switch and pod check successful."
+  echo ""
+
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  kubectl delete pod "$POD1" -n "$NS1" --ignore-not-found=true
+  kubectl delete pod "$POD2" -n "$NS2" --ignore-not-found=true
+  kubectl delete namespace "$NS1" --ignore-not-found=true
+  kubectl delete namespace "$NS2" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
+
   exit 0
 else
-  echo "[FAIL] No pods found in ns-two after context switch."
+  echo ""
+  echo "❌ [FAIL] No pods found in ns-two after context switch."
+  echo ""
   exit 1
 fi

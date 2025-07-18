@@ -23,13 +23,30 @@ for i in {1..10}; do
   sleep 2
 done
 if [ "$STATUS" != "Running" ]; then
-  echo "[FAIL] Pod $POD_NAME is not running (status: $STATUS)"
+  echo ""
+  echo "❌ [FAIL] Pod $POD_NAME is not running (status: $STATUS)"
+  echo ""
   exit 1
 fi
 
 # Check file in the volume
-kubectl exec -n "$NAMESPACE" "$POD_NAME" -- cat /data/test.txt | grep -q "$EXPECTED_MSG" && \
-  echo "[PASS] File written to persistent volume." && exit 0
+if kubectl exec -n "$NAMESPACE" "$POD_NAME" -- cat /data/test.txt | grep -q "$EXPECTED_MSG"; then
+  echo ""
+  echo "✅ [PASS] File written to persistent volume."
+  echo ""
 
-echo "[FAIL] File not found or content incorrect."
-exit 1
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  kubectl delete pod "$POD_NAME" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete pvc data-pvc -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete pv data-pv --ignore-not-found=true
+  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
+
+  exit 0
+else
+  echo ""
+  echo "❌ [FAIL] File not found or content incorrect."
+  echo ""
+  exit 1
+fi

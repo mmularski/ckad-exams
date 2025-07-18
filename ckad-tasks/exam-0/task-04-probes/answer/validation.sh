@@ -18,7 +18,9 @@ for i in {1..10}; do
   sleep 1
 done
 if [ "$STATUS" != "Running" ]; then
-  echo "[FAIL] Pod $POD_NAME is not running (status: $STATUS)"
+  echo ""
+  echo "❌ [FAIL] Pod $POD_NAME is not running (status: $STATUS)"
+  echo ""
   exit 1
 fi
 
@@ -26,9 +28,20 @@ fi
 READINESS=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o json | grep readinessProbe)
 LIVENESS=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o json | grep livenessProbe)
 if [ -n "$READINESS" ] && [ -n "$LIVENESS" ]; then
-  echo "[PASS] Both readiness and liveness probes are configured."
+  echo ""
+  echo "✅ [PASS] Both readiness and liveness probes are configured."
+  echo ""
+
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  kubectl delete pod "$POD_NAME" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
+
   exit 0
 else
-  echo "[FAIL] Readiness and/or liveness probe is missing."
+  echo ""
+  echo "❌ [FAIL] Readiness and/or liveness probe is missing."
+  echo ""
   exit 1
 fi

@@ -28,7 +28,9 @@ for ns in $NS_A $NS_B; do
     sleep 2
   done
   if [ "$STATUS" != "Running" ]; then
-    echo "[FAIL] Pod in namespace $ns is not running (status: $STATUS)"
+    echo ""
+    echo "❌ [FAIL] Pod in namespace $ns is not running (status: $STATUS)"
+    echo ""
     exit 1
   fi
 done
@@ -39,9 +41,23 @@ kubectl exec -n $NS_B $CLIENT -- wget -qO- --timeout=2 http://backend.ns-a.svc.c
 kubectl exec -n $NS_A $BACKEND -- wget -qO- --timeout=2 http://backend:80 && BACKEND_OK=1 || BACKEND_OK=0
 
 if [ "$CLIENT_OK" -eq 1 ] && [ "$BACKEND_OK" -eq 0 ]; then
-  echo "[PASS] NetworkPolicy works as expected."
+  echo ""
+  echo "✅ [PASS] NetworkPolicy works as expected."
+  echo ""
+
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  kubectl delete networkpolicy allow-from-ns-b -n "$NS_A" --ignore-not-found=true
+  kubectl delete pod "$BACKEND" -n "$NS_A" --ignore-not-found=true
+  kubectl delete pod "$CLIENT" -n "$NS_B" --ignore-not-found=true
+  kubectl delete namespace "$NS_A" --ignore-not-found=true
+  kubectl delete namespace "$NS_B" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
+
   exit 0
 else
-  echo "[FAIL] NetworkPolicy does not work as expected."
+  echo ""
+  echo "❌ [FAIL] NetworkPolicy does not work as expected."
+  echo ""
   exit 1
 fi

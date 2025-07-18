@@ -21,7 +21,9 @@ for i in {1..10}; do
   sleep 2
 done
 if [ "$STATUS" != "1" ]; then
-  echo "[FAIL] Job $JOB_NAME did not complete successfully."
+  echo ""
+  echo "❌ [FAIL] Job $JOB_NAME did not complete successfully."
+  echo ""
   exit 1
 fi
 
@@ -29,9 +31,23 @@ fi
 POD=$(kubectl get pods -n "$NAMESPACE" -l job-name=$JOB_NAME -o jsonpath='{.items[0].metadata.name}')
 LOG=$(kubectl logs "$POD" -n "$NAMESPACE" 2>/dev/null || true)
 if echo "$LOG" | grep -q "$EXPECTED_MSG"; then
-  echo "[PASS] Found expected message in job logs."
+  echo ""
+  echo "✅ [PASS] Found expected message in job logs."
+  echo ""
+
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  kubectl delete job "$JOB_NAME" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete configmap data-input -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
+
   exit 0
 else
-  echo "[FAIL] Expected message not found in job logs."
+  echo ""
+  echo "❌ [FAIL] Expected message not found in job logs."
+  echo "📋 Job logs:"
+  echo "$LOG"
+  echo ""
   exit 1
 fi

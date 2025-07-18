@@ -18,16 +18,31 @@ for i in {1..10}; do
   sleep 2
 done
 if [ "$STATUS" != "Running" ]; then
-  echo "[FAIL] Pod $POD_NAME is not running (status: $STATUS)"
+  echo ""
+  echo "❌ [FAIL] Pod $POD_NAME is not running (status: $STATUS)"
+  echo ""
   exit 1
 fi
 
 # Check app logs for HTTP response
 LOG=$(kubectl logs "$POD_NAME" -c app -n "$NAMESPACE" 2>/dev/null || true)
 if echo "$LOG" | grep -q "HTTP/1.1 200 OK"; then
-  echo "[PASS] Ambassador pattern works and HTTP response received."
+  echo ""
+  echo "✅ [PASS] Ambassador pattern works and HTTP response received."
+  echo ""
+
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  kubectl delete pod "$POD_NAME" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
+
   exit 0
 else
-  echo "[FAIL] Ambassador pattern did not work as expected."
+  echo ""
+  echo "❌ [FAIL] Ambassador pattern did not work as expected."
+  echo "📋 App logs:"
+  echo "$LOG"
+  echo ""
   exit 1
 fi

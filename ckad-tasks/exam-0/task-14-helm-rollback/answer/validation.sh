@@ -19,7 +19,9 @@ helm upgrade $RELEASE $CHART --namespace $NAMESPACE -f $VALUES_BAD
 UPGRADE_STATUS=$?
 set -e
 if [ $UPGRADE_STATUS -eq 0 ]; then
-  echo "[FAIL] Upgrade with bad values should fail."
+  echo ""
+  echo "❌ [FAIL] Upgrade with bad values should fail."
+  echo ""
   exit 1
 fi
 
@@ -29,17 +31,30 @@ helm rollback $RELEASE 1 --namespace $NAMESPACE
 # Check pod status
 PODS=$(kubectl get pods -n $NAMESPACE --no-headers | grep Running | wc -l)
 if [ "$PODS" -ge 1 ]; then
-  echo "[PASS] Application is running after rollback."
+  echo "✅ [PASS] Application is running after rollback."
 else
-  echo "[FAIL] Application is not running after rollback."
+  echo ""
+  echo "❌ [FAIL] Application is not running after rollback."
+  echo ""
   exit 1
 fi
 
 # Check helm history
 if helm history $RELEASE --namespace $NAMESPACE | grep -q 'rollback'; then
-  echo "[PASS] Helm history shows rollback."
+  echo ""
+  echo "✅ [PASS] Helm history shows rollback."
+  echo ""
+
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  helm uninstall "$RELEASE" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
+
   exit 0
 else
-  echo "[FAIL] Helm history does not show rollback."
+  echo ""
+  echo "❌ [FAIL] Helm history does not show rollback."
+  echo ""
   exit 1
 fi
