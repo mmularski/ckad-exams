@@ -9,22 +9,17 @@ You are working in a Kubernetes cluster. Your task is to expose a Deployment usi
 In the `prep/` directory you will find:
 - `namespace.yaml` – namespace manifest
 
-To prepare the environment, run:
-
-```sh
-kubectl apply -f prep/namespace.yaml
-```
-
-You must create `deployment.yaml` and `service.yaml` yourself as part of the solution.
+**Note:** You need to create all required manifests from scratch in the `prep/` directory.
 
 ## Requirements
 - Create a namespace named `exam-0-task-07`.
-- Create a Deployment named `web-deployment` in that namespace using the `nginx:1.21` image with 2 replicas.
+- Create a Deployment named `web-deployment` in that namespace.
+- Use the `nginx:1.21` image with 2 replicas.
 - Create a Service named `web-service` that exposes the Deployment on port 80.
 - Use label `app: web-deployment` for pod selector and template labels.
 
 ## Deliverables
-- `deployment.yaml` and `service.yaml` in the `prep/` directory.
+- All required manifests in the `prep/` directory.
 - A Service that exposes the Deployment on port 80.
 - Pass the validation described below.
 

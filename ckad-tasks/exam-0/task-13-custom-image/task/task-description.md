@@ -9,29 +9,19 @@ You are working in a Kubernetes cluster. Your task is to deploy a Pod using a cu
 In the `prep/` directory you will find:
 - `namespace.yaml` – namespace manifest
 
-To prepare the environment, run:
-
-```sh
-kubectl apply -f prep/namespace.yaml
-```
-
-Build the Docker image:
-
-```sh
-docker build -t custom-image:latest prep/
-# If using minikube:
-minikube image load custom-image:latest
-```
-
-You must create `Dockerfile` and `pod.yaml` yourself as part of the solution.
+**Note:** You need to create additional files from scratch in the `prep/` directory.
 
 ## Requirements
 - Create a namespace named `exam-0-task-13`.
-- Build a Docker image named `custom-image:latest` that prints `Hello from custom image` on startup.
+- Build a Docker image named `custom-image:latest` using `busybox` as the base image.
+- The Docker image should create a file `/app/message.txt` with the content `Hello from custom image`.
 - Create a Pod named `custom-image-demo` in the namespace using this image.
+- The Pod should read and display the content of the file when it starts.
 
 ## Deliverables
 - `Dockerfile` and `pod.yaml` in the `prep/` directory.
+- The Docker image should create the file `/app/message.txt` with the specified content.
+- The Pod should read and display the file content on startup.
 - Pass the validation described below.
 
 ## Validation

@@ -2,9 +2,6 @@
 set -e
 
 NAMESPACE=exam-0-task-07
-DEPLOYMENT=prep/deployment.yaml
-SERVICE=prep/service.yaml
-NS_MANIFEST=prep/namespace.yaml
 DEPLOYMENT_NAME=web-deployment
 SERVICE_NAME=web-service
 EXPECTED_REPLICAS=2
@@ -12,9 +9,11 @@ EXPECTED_PORT=80
 IMAGE=nginx:1.21
 APP_LABEL=web-deployment
 
-kubectl apply -f "$NS_MANIFEST"
-kubectl apply -f "$DEPLOYMENT"
-kubectl apply -f "$SERVICE"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
+
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
 
 # Wait for deployment to be ready
 kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE --timeout=30s

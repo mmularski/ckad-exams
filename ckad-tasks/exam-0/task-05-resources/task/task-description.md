@@ -9,24 +9,20 @@ You are working in a Kubernetes cluster. Your task is to set resource requests a
 In the `prep/` directory you will find:
 - `namespace.yaml` – namespace manifest
 
-To prepare the environment, run:
-
-```sh
-kubectl apply -f prep/namespace.yaml
-```
-
-You must create `deployment.yaml` yourself as part of the solution.
+**Note:** You need to create all required manifests from scratch in the `prep/` directory.
 
 ## Requirements
 - Create a namespace named `exam-0-task-05`.
-- Create a Deployment named `resources-demo` in that namespace with 2 replicas using the `nginx:1.21` image.
-- Set resource requests: `cpu: 100m`, `memory: 64Mi`.
-- Set resource limits: `cpu: 200m`, `memory: 128Mi`.
-- Use label `app: web-server` for pod selector and template labels.
+- Create a Deployment named `resources-demo` in that namespace.
+- The Deployment should have 2 replicas.
+- Use the `nginx:1.21` image.
+- Set resource requests: 100m CPU and 64Mi memory.
+- Set resource limits: 200m CPU and 128Mi memory.
+- Use the label `app: web-server`.
 
 ## Deliverables
-- `deployment.yaml` in the `prep/` directory.
-- A Deployment with 2 running pods and correct resource settings.
+- All required manifests in the `prep/` directory.
+- A Deployment with proper resource requests and limits configured.
 - Pass the validation described below.
 
 ## Validation
@@ -37,4 +33,4 @@ To validate your solution, run:
 ```
 
 ## Notes
-- The Deployment should remain healthy and pods should be Running.
+- Resource requests and limits should be properly configured for both CPU and memory.

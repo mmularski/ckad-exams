@@ -7,4 +7,5 @@ spec:
   containers:
   - name: custom-app
     image: custom-image:latest
-    command: ["sh", "-c", "echo Hello from custom image && sleep 3600"]
+    imagePullPolicy: Never
+    command: ["sh", "-c", "cat /app/message.txt && sleep 3600"]

@@ -1,2 +1,10 @@
 # Student solutions - DO NOT COMMIT
-networkpolicy.yaml
+*.yaml
+*.yml
+*.json
+*.sh
+*.md
+!namespace.yaml
+!frontend.yaml
+!backend.yaml
+!unrelated.yaml

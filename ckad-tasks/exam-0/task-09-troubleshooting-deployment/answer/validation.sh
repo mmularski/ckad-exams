@@ -2,27 +2,31 @@
 set -e
 
 NAMESPACE=exam-0-task-09
-DEPLOYMENT=prep/deployment.yaml
-NS_MANIFEST=prep/namespace.yaml
 DEPLOYMENT_NAME=broken-deployment
 
-kubectl apply -f "$NS_MANIFEST"
+echo "Applying namespace..."
+kubectl apply -f prep/namespace.yaml
 
 # Delete the old broken deployment if it exists
 kubectl delete deployment "$DEPLOYMENT_NAME" -n "$NAMESPACE" --ignore-not-found=true
 
 # Apply the corrected deployment
-kubectl apply -f "$DEPLOYMENT"
+if [ -f "prep/deployment-fixed.yaml" ]; then
+  echo "Applying fixed deployment..."
+  kubectl apply -f prep/deployment-fixed.yaml
+else
+  echo "❌ [FAIL] No deployment-fixed.yaml found. Create the corrected deployment as deployment-fixed.yaml"
+  exit 1
+fi
 
 # Wait for deployment to be ready
 kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE --timeout=30s
 
-# Check pod is running
-POD=$(kubectl get pods -n $NAMESPACE -l app=$DEPLOYMENT_NAME -o jsonpath='{.items[0].metadata.name}')
-STATUS=$(kubectl get pod $POD -n $NAMESPACE -o jsonpath='{.status.phase}')
-if [ "$STATUS" != "Running" ]; then
+# Check pod is running (find by deployment name)
+POD=$(kubectl get pods -n $NAMESPACE -o jsonpath='{.items[0].metadata.name}' --field-selector=status.phase=Running 2>/dev/null || echo "")
+if [ -z "$POD" ]; then
   echo ""
-  echo "❌ [FAIL] Pod is not running (status: $STATUS)"
+  echo "❌ [FAIL] No running pod found for deployment $DEPLOYMENT_NAME"
   echo ""
   exit 1
 fi

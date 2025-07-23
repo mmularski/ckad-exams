@@ -2,17 +2,12 @@
 set -e
 
 NAMESPACE=exam-0-task-10
-NS_MANIFEST=prep/namespace.yaml
-FRONTEND=prep/frontend.yaml
-BACKEND=prep/backend.yaml
-UNRELATED=prep/unrelated.yaml
-NETWORKPOLICY=prep/networkpolicy.yaml
 
-kubectl apply -f "$NS_MANIFEST"
-kubectl apply -f "$FRONTEND"
-kubectl apply -f "$BACKEND"
-kubectl apply -f "$UNRELATED"
-kubectl apply -f "$NETWORKPOLICY"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
+
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
 
 # Wait for pods to be running
 for label in frontend backend unrelated; do
@@ -42,9 +37,9 @@ done
 sleep 5
 
 # Test connectivity: frontend -> backend (should succeed)
-kubectl exec -n $NAMESPACE $FRONTEND_POD -- /usr/bin/curl -s --connect-timeout 5 http://backend:80 && FRONTEND_OK=1 || FRONTEND_OK=0
+kubectl exec -n $NAMESPACE $FRONTEND_POD -- /usr/bin/curl -s --connect-timeout 5 http://backend-api.exam-0-task-10.svc.cluster.local:80 && FRONTEND_OK=1 || FRONTEND_OK=0
 # Test connectivity: unrelated -> backend (should fail)
-kubectl exec -n $NAMESPACE $UNRELATED_POD -- /usr/bin/curl -s --connect-timeout 5 http://backend:80 && UNRELATED_OK=1 || UNRELATED_OK=0
+kubectl exec -n $NAMESPACE $UNRELATED_POD -- /usr/bin/curl -s --connect-timeout 5 http://backend-api.exam-0-task-10.svc.cluster.local:80 && UNRELATED_OK=1 || UNRELATED_OK=0
 
 if [ "$FRONTEND_OK" -eq 1 ] && [ "$UNRELATED_OK" -eq 0 ]; then
   echo ""
@@ -57,7 +52,7 @@ if [ "$FRONTEND_OK" -eq 1 ] && [ "$UNRELATED_OK" -eq 0 ]; then
   kubectl delete deployment frontend -n "$NAMESPACE" --ignore-not-found=true
   kubectl delete deployment backend -n "$NAMESPACE" --ignore-not-found=true
   kubectl delete deployment unrelated -n "$NAMESPACE" --ignore-not-found=true
-  kubectl delete service backend -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete service backend-api -n "$NAMESPACE" --ignore-not-found=true
   kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
   echo "✨ Cleanup completed!"
 

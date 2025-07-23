@@ -12,11 +12,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: broken-deployment
+      app: web
   template:
     metadata:
       labels:
-        app: broken-deployment
+        app: web
     spec:
       containers:
       - name: broken-container

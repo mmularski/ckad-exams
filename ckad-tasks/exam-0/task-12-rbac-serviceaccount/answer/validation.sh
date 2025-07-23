@@ -2,16 +2,13 @@
 set -e
 
 NAMESPACE=exam-0-task-12
-NS_MANIFEST=prep/namespace.yaml
-SA_MANIFEST=prep/serviceaccount.yaml
-ROLE_MANIFEST=prep/role.yaml
-RB_MANIFEST=prep/rolebinding.yaml
 SA=limited-access
 
-kubectl apply -f "$NS_MANIFEST"
-kubectl apply -f "$SA_MANIFEST"
-kubectl apply -f "$ROLE_MANIFEST"
-kubectl apply -f "$RB_MANIFEST"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
+
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
 
 # Check permissions (handle exit codes properly)
 GET=$(kubectl auth can-i get pods --as=system:serviceaccount:$NAMESPACE:$SA -n $NAMESPACE 2>/dev/null || echo "no")

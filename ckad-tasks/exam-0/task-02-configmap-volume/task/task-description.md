@@ -9,13 +9,7 @@ You are working in a Kubernetes cluster. Your task is to mount a ConfigMap as a 
 In the `prep/` directory you will find:
 - `namespace.yaml` – namespace manifest
 
-To prepare the environment, run:
-
-```sh
-kubectl apply -f prep/namespace.yaml
-```
-
-You must create `configmap.yaml` and `pod.yaml` yourself as part of the solution.
+**Note:** You need to create all required manifests from scratch in the `prep/` directory.
 
 ## Requirements
 - Create a namespace named `exam-0-task-02`.
@@ -26,7 +20,7 @@ You must create `configmap.yaml` and `pod.yaml` yourself as part of the solution
 - The container should print the contents of `/etc/config/config.txt` on startup and then sleep.
 
 ## Deliverables
-- `configmap.yaml` and `pod.yaml` in the `prep/` directory.
+- All required manifests in the `prep/` directory.
 - A Pod that prints the contents of the ConfigMap file on startup.
 - Pass the validation described below.
 

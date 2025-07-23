@@ -10,6 +10,8 @@ In the `prep/` directory you will find:
 - `namespace.yaml` – namespace manifest
 - `frontend.yaml`, `backend.yaml`, `unrelated.yaml` – Deployment manifests
 
+**Note:** You need to create additional manifests from scratch in the `prep/` directory.
+
 **Important:** NetworkPolicy requires a CNI (Container Network Interface) that supports NetworkPolicy. If you're using minikube, you need to start it with a compatible CNI:
 
 ```sh
@@ -23,24 +25,14 @@ minikube start --cni=calico --driver=docker
 kubectl get pods -n kube-system | grep calico
 ```
 
-To prepare the environment, run:
-
-```sh
-kubectl apply -f prep/namespace.yaml
-kubectl apply -f prep/frontend.yaml
-kubectl apply -f prep/backend.yaml
-kubectl apply -f prep/unrelated.yaml
-```
-
-Create the NetworkPolicy manifest as `prep/networkpolicy.yaml`.
-
 ## Requirements
 - Create a namespace named `exam-0-task-10`.
 - Deploy three Deployments: `frontend`, `backend`, and `unrelated` in that namespace, each with a single pod.
 - Create a NetworkPolicy that allows only the `frontend` pod to connect to the `backend` pod on port 80. All other traffic should be denied.
+- The frontend pod communicates with the backend using CoreDNS at `backend-api.exam-0-task-10.svc.cluster.local:80`.
 
 ## Deliverables
-- NetworkPolicy manifest as `prep/networkpolicy.yaml`.
+- All required manifests in the `prep/` directory.
 - Pass the validation described below.
 
 ## Validation

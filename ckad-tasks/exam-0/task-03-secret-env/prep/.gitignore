@@ -1,3 +1,7 @@
 # Student solutions - DO NOT COMMIT
-secret.yaml
-pod.yaml
+*.yaml
+*.yml
+*.json
+*.sh
+*.md
+!namespace.yaml

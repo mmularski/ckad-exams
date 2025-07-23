@@ -9,23 +9,18 @@ You are working in a Kubernetes cluster. Your task is to add readiness and liven
 In the `prep/` directory you will find:
 - `namespace.yaml` – namespace manifest
 
-To prepare the environment, run:
-
-```sh
-kubectl apply -f prep/namespace.yaml
-```
-
-You must create `pod.yaml` yourself as part of the solution.
+**Note:** You need to create all required manifests from scratch in the `prep/` directory.
 
 ## Requirements
 - Create a namespace named `exam-0-task-04`.
-- Create a Pod named `probes-demo` in that namespace with a single container based on the `nginx:1.21` image.
-- Add a liveness probe that checks HTTP GET `/` on port 80.
-- Add a readiness probe that checks HTTP GET `/` on port 80.
+- Create a Pod named `probes-demo` in that namespace.
+- The Pod should have a single container based on the `nginx:1.21` image.
+- Add a liveness probe that checks HTTP GET on path `/` and port `80` every 10 seconds.
+- Add a readiness probe that checks HTTP GET on path `/` and port `80` every 10 seconds.
 
 ## Deliverables
-- `pod.yaml` in the `prep/` directory.
-- A Pod with working readiness and liveness probes.
+- All required manifests in the `prep/` directory.
+- A Pod with both liveness and readiness probes configured.
 - Pass the validation described below.
 
 ## Validation
@@ -36,4 +31,4 @@ To validate your solution, run:
 ```
 
 ## Notes
-- The Pod should remain in Running state.
+- The probes should check the nginx web server's health endpoint.

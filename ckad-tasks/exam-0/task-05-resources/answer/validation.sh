@@ -2,8 +2,6 @@
 set -e
 
 NAMESPACE=exam-0-task-05
-DEPLOYMENT=prep/deployment.yaml
-NS_MANIFEST=prep/namespace.yaml
 DEPLOYMENT_NAME=resources-demo
 EXPECTED_REPLICAS=2
 REQ_CPU=100m
@@ -12,8 +10,11 @@ LIM_CPU=200m
 LIM_MEM=128Mi
 APP_LABEL=web-server
 
-kubectl apply -f "$NS_MANIFEST"
-kubectl apply -f "$DEPLOYMENT"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
+
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
 
 # Wait for deployment to be ready
 kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE --timeout=30s

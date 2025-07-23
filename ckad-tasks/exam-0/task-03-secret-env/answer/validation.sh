@@ -2,15 +2,14 @@
 set -e
 
 NAMESPACE=exam-0-task-03
-SECRET=prep/secret.yaml
-POD=prep/pod.yaml
-NS_MANIFEST=prep/namespace.yaml
-EXPECTED_MSG="TopSecretValue"
-POD_NAME=secret-env-demo
+EXPECTED_MSG="mysecretpassword"
+POD_NAME=secret-demo
 
-kubectl apply -f "$NS_MANIFEST"
-kubectl apply -f "$SECRET"
-kubectl apply -f "$POD"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
+
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
 
 # Wait for pod to be running
 for i in {1..10}; do
@@ -37,7 +36,7 @@ if echo "$LOG" | grep -q "$EXPECTED_MSG"; then
   # Clean up resources on success
   echo "🧹 Cleaning up resources..."
   kubectl delete pod "$POD_NAME" -n "$NAMESPACE" --ignore-not-found=true
-  kubectl delete secret env-secret -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete secret app-secret -n "$NAMESPACE" --ignore-not-found=true
   kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
   echo "✨ Cleanup completed!"
 

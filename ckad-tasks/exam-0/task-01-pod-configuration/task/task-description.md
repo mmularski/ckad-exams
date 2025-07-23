@@ -8,16 +8,8 @@ You are working in a Kubernetes cluster. Your task is to create a Pod that consu
 ## Preparation
 In the `prep/` directory you will find:
 - `namespace.yaml` – namespace manifest
-- `setup.sh` – script to create the namespace
 
-To prepare the environment, run:
-
-```sh
-       cd prep
-       ./setup.sh namespace.yaml
-```
-
-You must create `configmap.yaml` and `pod.yaml` yourself as part of the solution.
+**Note:** You need to create all required manifests from scratch in the `prep/` directory.
 
 ## Requirements
 - Create a namespace named `exam-0-task-01`.
@@ -27,7 +19,7 @@ You must create `configmap.yaml` and `pod.yaml` yourself as part of the solution
 - The container should read the value of `APP_MESSAGE` from the ConfigMap as an environment variable and print it on startup.
 
 ## Deliverables
-- `configmap.yaml` and `pod.yaml` in the `prep/` directory.
+- All required manifests in the `prep/` directory.
 - A Pod that prints the value of `APP_MESSAGE` from the ConfigMap on startup.
 - Pass the validation described below.
 

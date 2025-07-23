@@ -5,4 +5,4 @@
 *.sh
 *.md
 !namespace.yaml
-!broken-deployment.yaml
+!values-old.yaml

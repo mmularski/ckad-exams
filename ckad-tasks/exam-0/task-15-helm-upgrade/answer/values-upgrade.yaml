@@ -1,0 +1,17 @@
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: "newsecurepassword456"
+    database: newapp
+  fullnameOverride: "modern-postgresql"
+  primary:
+    persistence:
+      enabled: true
+      size: 5Gi
+    resources:
+      requests:
+        cpu: 200m
+        memory: 384Mi
+      limits:
+        cpu: 300m
+        memory: 640Mi

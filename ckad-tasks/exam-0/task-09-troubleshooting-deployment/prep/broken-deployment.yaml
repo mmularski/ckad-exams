@@ -7,14 +7,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: broken
+      app: web
   template:
     metadata:
       labels:
-        app: broken-deployment
+        app: nginx
     spec:
       containers:
       - name: broken-container
-        image: nginx:doesnotexist
+        image: nginx:1.20.118-pre
         ports:
         - containerPort: 80

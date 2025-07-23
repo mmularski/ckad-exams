@@ -6,16 +6,16 @@ metadata:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: env-secret
+  name: app-secret
   namespace: exam-0-task-03
 type: Opaque
 data:
-  SECRET_MESSAGE: VG9wU2VjcmV0VmFsdWU=
+  DB_PASSWORD: bXlzZWNyZXRwYXNzd29yZA==
 ---
 apiVersion: v1
 kind: Pod
 metadata:
-  name: secret-env-demo
+  name: secret-demo
   namespace: exam-0-task-03
 spec:
   containers:
@@ -24,11 +24,11 @@ spec:
     command: ["/bin/sh", "-c"]
     args:
     - |
-      echo $SECRET_MESSAGE
+      echo $DB_PASSWORD
       sleep 3600
     env:
-    - name: SECRET_MESSAGE
+    - name: DB_PASSWORD
       valueFrom:
         secretKeyRef:
-          name: env-secret
-          key: SECRET_MESSAGE
+          name: app-secret
+          key: DB_PASSWORD

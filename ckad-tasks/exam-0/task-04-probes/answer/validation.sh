@@ -2,12 +2,13 @@
 set -e
 
 NAMESPACE=exam-0-task-04
-POD=prep/pod.yaml
-NS_MANIFEST=prep/namespace.yaml
 POD_NAME=probes-demo
 
-kubectl apply -f "$NS_MANIFEST"
-kubectl apply -f "$POD"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
+
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
 
 # Wait for pod to be running
 for i in {1..10}; do

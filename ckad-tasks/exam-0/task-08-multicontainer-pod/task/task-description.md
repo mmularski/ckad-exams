@@ -9,13 +9,7 @@ You are working in a Kubernetes cluster. Your task is to create a Pod using the 
 In the `prep/` directory you will find:
 - `namespace.yaml` – namespace manifest
 
-To prepare the environment, run:
-
-```sh
-kubectl apply -f prep/namespace.yaml
-```
-
-You must create `pod.yaml` yourself as part of the solution.
+**Note:** You need to create all required manifests from scratch in the `prep/` directory.
 
 ## Requirements
 - Create a namespace named `exam-0-task-08`.
@@ -28,7 +22,7 @@ You must create `pod.yaml` yourself as part of the solution.
 - The `sidecar` container should read and print this message.
 
 ## Deliverables
-- `pod.yaml` in the `prep/` directory.
+- All required manifests in the `prep/` directory.
 - A Pod that demonstrates the sidecar pattern with data sharing.
 - Pass the validation described below.
 

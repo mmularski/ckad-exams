@@ -1,0 +1,17 @@
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: "oldpassword123"
+    database: oldapp
+  fullnameOverride: "legacy-postgresql"
+  primary:
+    persistence:
+      enabled: false
+      size: 5Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
