@@ -10,6 +10,7 @@ SERVICE_NAME=web-service
 EXPECTED_REPLICAS=2
 EXPECTED_PORT=80
 IMAGE=nginx:1.21
+APP_LABEL=web-deployment
 
 kubectl apply -f "$NS_MANIFEST"
 kubectl apply -f "$DEPLOYMENT"
@@ -19,7 +20,7 @@ kubectl apply -f "$SERVICE"
 kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE --timeout=30s
 
 # Check number of running pods
-RUNNING=$(kubectl get pods -n $NAMESPACE -l app=$DEPLOYMENT_NAME --field-selector=status.phase=Running --no-headers | wc -l)
+RUNNING=$(kubectl get pods -n $NAMESPACE -l app=$APP_LABEL --field-selector=status.phase=Running --no-headers | wc -l)
 if [ "$RUNNING" -eq "$EXPECTED_REPLICAS" ]; then
   echo "✅ [PASS] $EXPECTED_REPLICAS nginx pods are running."
 else

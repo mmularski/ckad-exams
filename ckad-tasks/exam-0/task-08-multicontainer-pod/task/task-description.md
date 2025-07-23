@@ -24,6 +24,8 @@ You must create `pod.yaml` yourself as part of the solution.
   - `sidecar`: reads and prints the message from the shared volume.
 - Use the `busybox` image for both containers.
 - Use an `emptyDir` volume for sharing data between containers.
+- The `main-app` container should write the message `Hello from main-app!` to the shared volume.
+- The `sidecar` container should read and print this message.
 
 ## Deliverables
 - `pod.yaml` in the `prep/` directory.

@@ -22,6 +22,7 @@ You must create `deployment.yaml` yourself as part of the solution.
 - Create a Deployment named `resources-demo` in that namespace with 2 replicas using the `nginx:1.21` image.
 - Set resource requests: `cpu: 100m`, `memory: 64Mi`.
 - Set resource limits: `cpu: 200m`, `memory: 128Mi`.
+- Use label `app: web-server` for pod selector and template labels.
 
 ## Deliverables
 - `deployment.yaml` in the `prep/` directory.

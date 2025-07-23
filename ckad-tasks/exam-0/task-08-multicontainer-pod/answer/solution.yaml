@@ -12,7 +12,7 @@ spec:
   containers:
     - name: main-app
       image: busybox
-      command: ["sh", "-c", "echo Hello from main-app > /shared/message && sleep 3600"]
+      command: ["sh", "-c", "echo Hello from main-app! > /shared/message && sleep 3600"]
       volumeMounts:
         - name: shared-data
           mountPath: /shared

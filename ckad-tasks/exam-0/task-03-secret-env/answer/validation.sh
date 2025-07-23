@@ -37,7 +37,7 @@ if echo "$LOG" | grep -q "$EXPECTED_MSG"; then
   # Clean up resources on success
   echo "🧹 Cleaning up resources..."
   kubectl delete pod "$POD_NAME" -n "$NAMESPACE" --ignore-not-found=true
-  kubectl delete secret db-secret -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete secret env-secret -n "$NAMESPACE" --ignore-not-found=true
   kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
   echo "✨ Cleanup completed!"
 

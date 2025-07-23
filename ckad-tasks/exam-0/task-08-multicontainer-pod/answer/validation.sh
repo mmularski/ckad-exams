@@ -26,6 +26,9 @@ if [ "$STATUS" != "Running" ]; then
   exit 1
 fi
 
+# Wait a bit more for sidecar to process the message
+sleep 15
+
 # Check sidecar logs for expected message
 LOG=$(kubectl logs "$POD_NAME" -c "$SIDECAR_CONTAINER" -n "$NAMESPACE" 2>/dev/null || true)
 if echo "$LOG" | grep -q "$EXPECTED_MSG"; then
