@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: pod-two
-  namespace: ns-two
+  namespace: exam-0-task-11-2
 spec:
   containers:
   - name: busybox

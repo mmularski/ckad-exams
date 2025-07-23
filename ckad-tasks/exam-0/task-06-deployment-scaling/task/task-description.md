@@ -22,6 +22,7 @@ You must create `deployment.yaml` yourself as part of the solution.
 - Create a Deployment named `nginx-deployment` in that namespace using the `nginx:1.21` image.
 - The Deployment should have 3 replicas.
 - The Deployment should expose port 80.
+- The Deployment must use the label `app: nginx-deployment`.
 
 ## Deliverables
 - `deployment.yaml` in the `prep/` directory.

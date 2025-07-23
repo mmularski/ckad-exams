@@ -18,12 +18,12 @@ kubectl apply -f prep/namespace.yaml
 Build the Docker image:
 
 ```sh
-docker build -t custom-image:latest answer/
+docker build -t custom-image:latest prep/
 # If using minikube:
 minikube image load custom-image:latest
 ```
 
-You must create `pod.yaml` yourself as part of the solution.
+You must create `Dockerfile` and `pod.yaml` yourself as part of the solution.
 
 ## Requirements
 - Create a namespace named `exam-0-task-13`.
@@ -31,8 +31,7 @@ You must create `pod.yaml` yourself as part of the solution.
 - Create a Pod named `custom-image-demo` in the namespace using this image.
 
 ## Deliverables
-- `pod.yaml` in the `prep/` directory.
-- `Dockerfile` and source code in the `answer/` directory.
+- `Dockerfile` and `pod.yaml` in the `prep/` directory.
 - Pass the validation described below.
 
 ## Validation

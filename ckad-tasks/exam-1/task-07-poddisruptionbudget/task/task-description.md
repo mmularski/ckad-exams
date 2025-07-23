@@ -19,6 +19,7 @@ You must create `deployment.yaml` and `pdb.yaml` yourself as part of the solutio
 ## Requirements
 - Create a namespace named `exam-1-task-07`.
 - Deploy a Deployment named `ha-app` with 3 replicas of the `nginx:1.21` image.
+- The Deployment must use the label `app: ha-app`.
 - Create a PodDisruptionBudget named `ha-pdb` that requires at least 2 pods to be available at all times.
 - The PDB should select pods with label `app: ha-app`.
 

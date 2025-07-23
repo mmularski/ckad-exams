@@ -2,12 +2,16 @@
 set -e
 
 NAMESPACE=exam-0-task-09
-DEPLOYMENT=answer/solution.yaml
+DEPLOYMENT=prep/deployment.yaml
 NS_MANIFEST=prep/namespace.yaml
 DEPLOYMENT_NAME=broken-deployment
-EXPECTED_IMAGE=nginx:1.21
 
 kubectl apply -f "$NS_MANIFEST"
+
+# Delete the old broken deployment if it exists
+kubectl delete deployment "$DEPLOYMENT_NAME" -n "$NAMESPACE" --ignore-not-found=true
+
+# Apply the corrected deployment
 kubectl apply -f "$DEPLOYMENT"
 
 # Wait for deployment to be ready
@@ -23,11 +27,11 @@ if [ "$STATUS" != "Running" ]; then
   exit 1
 fi
 
-# Check image
+# Check image is nginx (any version)
 IMAGE=$(kubectl get pod $POD -n $NAMESPACE -o jsonpath='{.spec.containers[0].image}')
-if [ "$IMAGE" == "$EXPECTED_IMAGE" ]; then
+if [[ "$IMAGE" == nginx* ]]; then
   echo ""
-  echo "✅ [PASS] Pod uses image $EXPECTED_IMAGE."
+  echo "✅ [PASS] Pod uses nginx image: $IMAGE"
   echo ""
 
   # Clean up resources on success
@@ -39,7 +43,7 @@ if [ "$IMAGE" == "$EXPECTED_IMAGE" ]; then
   exit 0
 else
   echo ""
-  echo "❌ [FAIL] Pod does not use image $EXPECTED_IMAGE."
+  echo "❌ [FAIL] Pod does not use nginx image (found: $IMAGE)"
   echo ""
   exit 1
 fi

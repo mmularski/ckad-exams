@@ -6,7 +6,7 @@ NS_MANIFEST=prep/namespace.yaml
 FRONTEND=prep/frontend.yaml
 BACKEND=prep/backend.yaml
 UNRELATED=prep/unrelated.yaml
-NETWORKPOLICY=answer/solution.yaml
+NETWORKPOLICY=prep/networkpolicy.yaml
 
 kubectl apply -f "$NS_MANIFEST"
 kubectl apply -f "$FRONTEND"
@@ -30,13 +30,21 @@ for label in frontend backend unrelated; do
     echo ""
     exit 1
   fi
-  declare "${label^^}_POD=$POD"
+  # Store pod name in a variable with uppercase label
+  case $label in
+    frontend) FRONTEND_POD=$POD ;;
+    backend) BACKEND_POD=$POD ;;
+    unrelated) UNRELATED_POD=$POD ;;
+  esac
 done
 
+# Wait for backend service to be ready
+sleep 5
+
 # Test connectivity: frontend -> backend (should succeed)
-kubectl exec -n $NAMESPACE $FRONTEND_POD -- wget -qO- http://backend:80 && FRONTEND_OK=1 || FRONTEND_OK=0
+kubectl exec -n $NAMESPACE $FRONTEND_POD -- /usr/bin/curl -s --connect-timeout 5 http://backend:80 && FRONTEND_OK=1 || FRONTEND_OK=0
 # Test connectivity: unrelated -> backend (should fail)
-kubectl exec -n $NAMESPACE $UNRELATED_POD -- wget -qO- http://backend:80 && UNRELATED_OK=1 || UNRELATED_OK=0
+kubectl exec -n $NAMESPACE $UNRELATED_POD -- /usr/bin/curl -s --connect-timeout 5 http://backend:80 && UNRELATED_OK=1 || UNRELATED_OK=0
 
 if [ "$FRONTEND_OK" -eq 1 ] && [ "$UNRELATED_OK" -eq 0 ]; then
   echo ""
@@ -49,6 +57,7 @@ if [ "$FRONTEND_OK" -eq 1 ] && [ "$UNRELATED_OK" -eq 0 ]; then
   kubectl delete deployment frontend -n "$NAMESPACE" --ignore-not-found=true
   kubectl delete deployment backend -n "$NAMESPACE" --ignore-not-found=true
   kubectl delete deployment unrelated -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete service backend -n "$NAMESPACE" --ignore-not-found=true
   kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
   echo "✨ Cleanup completed!"
 
@@ -56,6 +65,8 @@ if [ "$FRONTEND_OK" -eq 1 ] && [ "$UNRELATED_OK" -eq 0 ]; then
 else
   echo ""
   echo "❌ [FAIL] NetworkPolicy does not work as expected."
+  echo "Frontend connectivity: $FRONTEND_OK (expected: 1)"
+  echo "Unrelated connectivity: $UNRELATED_OK (expected: 0)"
   echo ""
   exit 1
 fi

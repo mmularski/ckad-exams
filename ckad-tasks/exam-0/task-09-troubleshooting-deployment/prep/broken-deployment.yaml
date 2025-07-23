@@ -11,7 +11,7 @@ spec:
   template:
     metadata:
       labels:
-        app: broken
+        app: broken-deployment
     spec:
       containers:
       - name: broken-container

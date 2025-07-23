@@ -23,11 +23,10 @@ You must create `pod.yaml` yourself as part of the solution.
   - `INFO: Application started`
   - `ERROR: Failed to connect to database`
   - `INFO: Retrying...`
-- Your task: Deploy the pod, then use `kubectl logs` to extract and document the error message in `answer/error.txt`.
+- Your task: Deploy the pod, then use `kubectl logs` to extract and document the error message in `prep/error.txt`.
 
 ## Deliverables
-- `pod.yaml` in the `prep/` directory.
-- `error.txt` in the `answer/` directory containing the error line from the logs.
+- `pod.yaml` and `error.txt` in the `prep/` directory.
 - Pass the validation described below.
 
 ## Validation

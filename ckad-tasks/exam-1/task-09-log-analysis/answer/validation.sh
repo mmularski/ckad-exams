@@ -5,7 +5,7 @@ NAMESPACE=exam-1-task-09
 POD=prep/pod.yaml
 NS_MANIFEST=prep/namespace.yaml
 POD_NAME=logger-demo
-ERROR_FILE=answer/error.txt
+ERROR_FILE=prep/error.txt
 EXPECTED="ERROR: Failed to connect to database"
 
 kubectl apply -f "$NS_MANIFEST"

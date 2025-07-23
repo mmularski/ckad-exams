@@ -14,8 +14,8 @@ kubectl apply -f "$DEPLOYMENT"
 # Wait for deployment to be ready
 kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE --timeout=30s
 
-# Check number of running pods - use deployment name as selector
-RUNNING=$(kubectl get pods -n $NAMESPACE --field-selector=status.phase=Running --no-headers | grep $DEPLOYMENT_NAME | wc -l)
+# Check number of running pods - use label selector
+RUNNING=$(kubectl get pods -n $NAMESPACE -l app=$DEPLOYMENT_NAME --field-selector=status.phase=Running --no-headers | wc -l)
 if [ "$RUNNING" -eq "$EXPECTED_REPLICAS" ]; then
   echo "✅ [PASS] $EXPECTED_REPLICAS nginx pods are running."
 else

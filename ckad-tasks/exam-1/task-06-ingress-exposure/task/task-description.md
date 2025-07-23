@@ -19,6 +19,7 @@ You must create `deployment.yaml`, `service.yaml` and `ingress.yaml` yourself as
 ## Requirements
 - Create a namespace named `exam-1-task-06`.
 - Deploy a Deployment named `web-deployment` with 2 replicas of the `nginx:1.21` image.
+- The Deployment must use the label `app: web`.
 - Expose the Deployment with a Service named `web-service` on port 80.
 - Create an Ingress named `web-ingress` that routes HTTP traffic for host `web.exam.local` to the Service on path `/`.
 - Assume the Ingress controller is already installed.

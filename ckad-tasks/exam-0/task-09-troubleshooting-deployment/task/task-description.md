@@ -17,15 +17,16 @@ kubectl apply -f prep/namespace.yaml
 kubectl apply -f prep/broken-deployment.yaml
 ```
 
-Fix the manifest and save the corrected version as `answer/solution.yaml`.
+Fix the manifest and save the corrected version as `prep/deployment.yaml`.
 
 ## Requirements
 - Create a namespace named `exam-0-task-09`.
 - Deploy a Deployment named `broken-deployment` in that namespace. The Deployment is intentionally broken (e.g., wrong image).
+- The Deployment must use the label `app: broken-deployment`.
 - Identify and fix the issue so that the Deployment becomes healthy and the pod is running.
 
 ## Deliverables
-- Corrected Deployment manifest as `answer/solution.yaml`.
+- Corrected Deployment manifest as `prep/deployment.yaml`.
 - Pass the validation described below.
 
 ## Validation

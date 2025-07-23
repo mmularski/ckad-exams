@@ -6,20 +6,13 @@
 You are working in a Kubernetes cluster. Your task is to configure RBAC so that a ServiceAccount has limited permissions.
 
 ## Preparation
-In the `prep/` directory you will find:
-- `namespace.yaml` – namespace manifest
-- `serviceaccount.yaml` – ServiceAccount manifest
-- `role.yaml` – Role manifest
-- `rolebinding.yaml` – RoleBinding manifest
+In the `prep/` directory you will find empty template files that you need to complete:
+- `namespace.yaml` – namespace manifest (empty template)
+- `serviceaccount.yaml` – ServiceAccount manifest (empty template)
+- `role.yaml` – Role manifest (empty template)
+- `rolebinding.yaml` – RoleBinding manifest (empty template)
 
-To prepare the environment, run:
-
-```sh
-kubectl apply -f prep/namespace.yaml
-kubectl apply -f prep/serviceaccount.yaml
-kubectl apply -f prep/role.yaml
-kubectl apply -f prep/rolebinding.yaml
-```
+**Note:** All files in `prep/` are currently empty templates with TODO comments. You need to create the complete manifests from scratch.
 
 ## Requirements
 - Create a namespace named `exam-0-task-12`.

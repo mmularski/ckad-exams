@@ -15,5 +15,6 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: busybox
-        command: ["sh", "-c", "sleep 3600"]
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
