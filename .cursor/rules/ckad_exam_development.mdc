@@ -1,0 +1,242 @@
+---
+description: Guidelines for developing CKAD exam tasks and exam sets
+globs: ckad-tasks/**/*
+alwaysApply: true
+---
+
+# CKAD Exam Development Guidelines
+
+## **Core Principles**
+
+### **Exam Structure Requirements**
+- **15-20 tasks per exam**: Each exam must contain 15-20 tasks covering all CKAD curriculum domains
+- **Unique task sets**: Each exam must have completely different scenarios, configurations, and problem statements
+- **Progressive difficulty**: Tasks should increase in complexity within each exam (simple → medium → complex)
+- **Time constraints**: Each task should be completable within 5-10 minutes under exam conditions
+- **Real-world scenarios**: Tasks must reflect actual production use cases, not theoretical examples
+
+### **Task Distribution by CKAD Domain**
+Follow the official CKAD curriculum distribution:
+- **Application Environment, Configuration and Security (25%)**: 4 tasks
+- **Application Design and Build (20%)**: 3 tasks
+- **Application Deployment (20%)**: 3 tasks
+- **Services and Networking (20%)**: 3 tasks
+- **Application Observability and Maintenance (15%)**: 2 tasks
+
+## **Task Creation Standards**
+
+### **File Structure Requirements**
+```
+task-XX-[descriptive-name]/
+├── prep/
+│   ├── .gitignore          # Block student solutions, allow provided resources
+│   ├── namespace.yaml      # Isolated namespace for the task
+│   └── [additional-resources].yaml  # Broken configs, base resources, etc.
+├── task/
+│   └── task-description.md # Clear instructions and success criteria
+└── answer/
+    ├── solution.yaml       # Complete working solution
+    ├── solution.md         # Step-by-step explanation
+    └── validation.sh       # Automated verification script
+```
+
+### **Task Description Format**
+```markdown
+# [Task Title]
+
+**Points:** [4-8 points based on complexity]
+
+## Scenario
+[Real-world business context and requirement]
+
+## Preparation
+In the `prep/` directory you will find:
+- `namespace.yaml` – namespace manifest
+- [other resources as needed]
+
+## Requirements
+- [Specific technical requirements]
+- [Success criteria]
+- [Resource constraints]
+
+## Deliverables
+- [What files should be created/modified]
+- [Expected cluster state after completion]
+
+## Validation
+To validate your solution, run:
+```sh
+./answer/validation.sh
+```
+
+## Notes
+- [Hints about common pitfalls]
+- [References to specific Kubernetes documentation]
+```
+
+### **Critical Guidelines**
+- **NO SOLUTION HINTS**: Never provide step-by-step solutions or commands in task descriptions
+- **STUDENT THINKING**: Tasks should require independent problem-solving and research
+- **DOCUMENTATION REFERENCE**: Point to kubernetes.io documentation, don't provide answers
+- **REAL-WORLD CONTEXT**: Use business scenarios that require understanding, not memorization
+- **MULTIPLE APPROACHES**: Tasks should have multiple valid solution paths
+- **TROUBLESHOOTING**: Include scenarios that require debugging and analysis
+
+### **Validation Script Standards**
+- **Idempotent**: Scripts must work multiple times without errors
+- **Comprehensive**: Check both resource existence and correct configuration
+- **Clear feedback**: Success/failure messages with specific details
+- **Automated cleanup**: Clean up resources after validation
+- **Error handling**: Graceful handling of missing resources or failed operations
+
+## **Exam Development Process**
+
+### **Creating New Exam Sets**
+1. **Domain Analysis**: Ensure balanced coverage across all CKAD domains
+2. **Scenario Variety**: Create diverse real-world scenarios (web apps, microservices, data processing, etc.)
+3. **Difficulty Progression**: Start with simple tasks, progress to complex multi-step scenarios
+4. **Unique Configurations**: Each task must have different namespaces, resource names, and configurations
+5. **Cross-Domain Integration**: Include tasks that combine multiple CKAD domains
+
+### **Task Complexity Guidelines**
+- **Simple Tasks (4-5 points)**: Single resource creation or modification
+  - Example: Create a Pod with ConfigMap, basic Service exposure
+- **Medium Tasks (6-7 points)**: Multi-step scenarios with resource relationships
+  - Example: Deployment with rolling update, multi-container pods
+- **Complex Tasks (8+ points)**: Troubleshooting, comprehensive application setup
+  - Example: Debug broken deployment, complete Helm chart customization
+
+### **Quality Assurance Checklist**
+- [ ] Task is completable within 5-10 minutes
+- [ ] Solution has clear validation criteria
+- [ ] Validation script is idempotent and comprehensive
+- [ ] Task description is clear and unambiguous
+- [ ] Resources are properly isolated (namespace-based)
+- [ ] Gitignore prevents student solution commits
+- [ ] Task covers relevant CKAD curriculum domain
+- [ ] Scenario is realistic and production-like
+
+## **Technical Implementation**
+
+### **Namespace Isolation**
+- **Unique namespaces**: Each task uses `exam-X-task-YY` namespace pattern
+- **Resource isolation**: All resources scoped to task namespace
+- **Cleanup procedures**: Validation scripts clean up all resources
+
+### **Resource Naming Conventions**
+- **Consistent patterns**: Use descriptive names that indicate purpose
+- **Avoid conflicts**: Ensure no naming conflicts between tasks
+- **Clear identification**: Resource names should indicate their role
+
+### **Gitignore Management**
+```gitignore
+# Student solutions - DO NOT COMMIT
+*.yaml
+*.yml
+*.json
+*.sh
+*.md
+!namespace.yaml
+!values.yaml
+!values-*.yaml
+!broken-*.yaml
+!unrelated.yaml
+!frontend.yaml
+!backend.yaml
+```
+
+### **Validation Script Patterns**
+```bash
+#!/bin/bash
+set -e
+
+NAMESPACE=exam-X-task-YY
+# Apply namespace and resources
+kubectl apply -f prep/
+
+# Wait for resources to be ready
+# Check specific requirements
+# Validate expected state
+# Clean up resources
+```
+
+## **Content Guidelines**
+
+### **Real-World Scenarios**
+- **Web Applications**: Nginx deployments, frontend/backend services
+- **Microservices**: Multi-container patterns, service communication
+- **Data Processing**: Jobs, CronJobs, persistent storage
+- **Security**: RBAC, SecurityContext, NetworkPolicies
+- **Monitoring**: Health probes, log analysis, troubleshooting
+
+### **Problem-Solving Focus**
+- **Debugging Scenarios**: Broken deployments, misconfigured services, resource conflicts
+- **Optimization Tasks**: Performance tuning, resource management, scaling decisions
+- **Migration Challenges**: Version upgrades, API changes, configuration updates
+- **Security Hardening**: Pod security, network policies, RBAC configuration
+- **Troubleshooting**: Log analysis, status investigation, error resolution
+
+### **Common Task Types**
+1. **Resource Creation**: Pods, Deployments, Services, ConfigMaps, Secrets
+2. **Configuration Management**: Environment variables, volume mounts, ConfigMaps
+3. **Networking**: Services, Ingress, NetworkPolicies
+4. **Storage**: PersistentVolumes, PersistentVolumeClaims
+5. **Security**: RBAC, ServiceAccounts, SecurityContext
+6. **Troubleshooting**: Debug broken resources, analyze logs
+7. **Advanced Patterns**: Multi-container pods, init containers, sidecars
+8. **Package Management**: Helm charts, custom resources
+
+### **Avoid Common Pitfalls**
+- **Over-complexity**: Tasks should be focused and achievable
+- **Ambiguous requirements**: Clear, specific success criteria
+- **Environment dependencies**: Tasks should work in standard minikube
+- **Time-consuming setup**: Minimize preparation time
+- **Unrealistic scenarios**: Base on real production use cases
+- **GIVING SOLUTIONS**: Never provide commands, YAML snippets, or step-by-step instructions in task descriptions
+- **MEMORIZATION TASKS**: Avoid tasks that only test memorization of kubectl commands
+- **TOO MANY HINTS**: Don't over-explain or provide obvious solutions
+
+## **Task Set Differentiation**
+
+### **exam-0 (CKAD Tasks)**
+- **Focus**: Mix of CKAD curriculum tasks covering all domains
+- **Complexity**: Mix of simple, medium, and complex CKAD tasks
+- **Topics**: Pods, Deployments, Services, ConfigMaps, Secrets, Jobs, RBAC, NetworkPolicies
+- **Patterns**: Standard CKAD task patterns and scenarios
+
+### **exam-1 (CKAD Tasks)**
+- **Focus**: Different mix of CKAD curriculum tasks
+- **Complexity**: Mix of simple, medium, and complex CKAD tasks (different from exam-0)
+- **Topics**: CronJobs, Helm, PersistentVolumes, Ingress, PodSecurityContext, ResourceQuotas
+- **Patterns**: Additional CKAD task patterns and scenarios
+
+### **exam-2 (CKAD Tasks)**
+- **Focus**: More CKAD tasks with unique curriculum combinations
+- **Complexity**: Mix of simple, medium, and complex CKAD tasks (unique combination)
+- **Topics**: Additional CKAD curriculum topics and edge cases
+- **Patterns**: Extended CKAD task patterns and scenarios
+
+### **exam-3 (CKAD Tasks)**
+- **Focus**: Advanced CKAD tasks and edge cases
+- **Complexity**: Mix of simple, medium, and complex CKAD tasks (different from previous sets)
+- **Topics**: Advanced CKAD scenarios and comprehensive curriculum coverage
+- **Patterns**: Advanced CKAD task patterns and real-world scenarios
+
+## **Maintenance and Updates**
+
+### **Regular Review Cycle**
+- **Monthly**: Review task completion times and success rates
+- **Quarterly**: Update for Kubernetes version changes
+- **Annually**: Comprehensive curriculum alignment review
+
+### **Quality Metrics**
+- **Completion rate**: >90% of students should complete tasks successfully
+- **Time efficiency**: Tasks completed within 5-10 minutes
+- **Learning effectiveness**: Tasks should reinforce CKAD concepts
+- **Real-world relevance**: Scenarios should reflect actual production use
+
+### **Continuous Improvement**
+- **Feedback collection**: Gather student and instructor feedback
+- **Difficulty adjustment**: Refine task complexity based on performance data
+- **Content updates**: Keep scenarios current with Kubernetes evolution
+- **Validation enhancement**: Improve automated testing and feedback
