@@ -14,7 +14,7 @@ In the `prep/` directory you will find:
 
 ## Requirements
 - Create a namespace named `exam-0-task-09`.
-- Deploy a Deployment named `broken-deployment` in that namespace. The Deployment is intentionally broken (e.g., wrong image).
+- Deploy a Deployment named `broken-deployment` in that namespace. The Deployment is intentionally broken.
 - Identify and fix the issue so that the Deployment becomes healthy and the pod is running.
 
 ## Deliverables

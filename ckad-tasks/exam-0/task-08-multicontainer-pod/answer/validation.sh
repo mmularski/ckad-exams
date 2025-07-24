@@ -30,11 +30,22 @@ fi
 # Wait a bit more for sidecar to process the message
 sleep 15
 
+# Check if the shared file exists in the volume
+FILE_CONTENT=$(kubectl exec "$POD_NAME" -c "$SIDECAR_CONTAINER" -n "$NAMESPACE" -- cat /shared/message 2>/dev/null || echo "")
+if [ "$FILE_CONTENT" != "$EXPECTED_MSG" ]; then
+  echo ""
+  echo "❌ [FAIL] Shared file /shared/message does not contain the expected message."
+  echo "Expected: $EXPECTED_MSG"
+  echo "Found: $FILE_CONTENT"
+  echo ""
+  exit 1
+fi
+
 # Check sidecar logs for expected message
 LOG=$(kubectl logs "$POD_NAME" -c "$SIDECAR_CONTAINER" -n "$NAMESPACE" 2>/dev/null || true)
 if echo "$LOG" | grep -q "$EXPECTED_MSG"; then
   echo ""
-  echo "✅ [PASS] Found expected message in sidecar logs."
+  echo "✅ [PASS] Found expected message in sidecar logs and shared file exists."
   echo ""
 
   # Clean up resources on success

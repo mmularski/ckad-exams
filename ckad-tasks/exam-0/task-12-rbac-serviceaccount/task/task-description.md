@@ -13,8 +13,9 @@ In the `prep/` directory you will find:
 
 ## Requirements
 - Create a namespace named `exam-0-task-12`.
-- Create a ServiceAccount with limited permissions to access pods in that namespace.
+- Create a ServiceAccount named `limited-access` in that namespace.
 - Configure RBAC so that the ServiceAccount can only read pod information but cannot create or delete pods.
+- The ServiceAccount should only have permissions to perform `get` and `list` operations on pods.
 
 ## Deliverables
 - All required manifests in the `prep/` directory.
@@ -28,3 +29,7 @@ To validate your solution, run:
 ```sh
 ./answer/validation.sh
 ```
+
+## Notes
+- The ServiceAccount must be named `limited-access`.
+- The ServiceAccount should only have permissions to read pods, not create or delete them.

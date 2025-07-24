@@ -19,7 +19,7 @@ spec:
         app: web
     spec:
       containers:
-      - name: broken-container
+      - name: container
         image: nginx:1.21
         ports:
         - containerPort: 80

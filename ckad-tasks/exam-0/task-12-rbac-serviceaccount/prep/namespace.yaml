@@ -1,1 +1,8 @@
 # TODO: Create a namespace manifest
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: exam-0-task-12
+spec: {}
+status: {}

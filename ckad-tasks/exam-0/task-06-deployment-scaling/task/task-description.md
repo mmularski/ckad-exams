@@ -3,7 +3,7 @@
 **Points:** 5
 
 ## Scenario
-You are working in a Kubernetes cluster. Your task is to create and scale a Deployment.
+You are working in a Kubernetes cluster. Your task is to create a Deployment with multiple replicas and scale it.
 
 ## Preparation
 In the `prep/` directory you will find:
@@ -13,11 +13,11 @@ In the `prep/` directory you will find:
 
 ## Requirements
 - Create a namespace named `exam-0-task-06`.
-- Create a Deployment named `nginx-deployment` in that namespace.
-- Use the `nginx:1.21` image.
-- The Deployment should have 3 replicas.
-- The Deployment should expose port 80.
-- The Deployment must use the label `app: nginx-deployment`.
+- Create a Deployment named `nginx-deployment` with the following configuration:
+  - 3 replicas
+  - Image: `nginx:1.21`
+  - Pods must be labeled with `app: nginx-deployment`
+- The Deployment should be ready and all pods should be running.
 
 ## Deliverables
 - All required manifests in the `prep/` directory.
@@ -32,4 +32,3 @@ To validate your solution, run:
 ```
 
 ## Notes
-- You can use `kubectl scale deployment nginx-deployment --replicas=3 -n exam-0-task-06` to scale if needed.

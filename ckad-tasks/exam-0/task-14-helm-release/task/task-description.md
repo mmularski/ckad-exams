@@ -14,7 +14,7 @@ In the `prep/` directory you will find:
 
 ## Requirements
 - Apply the namespace from `prep/namespace.yaml`.
-- Add the Bitnami Helm repository.
+- Add the Bitnami Helm repository `https://charts.bitnami.com/bitnami`.
 - Install PostgreSQL using Helm with the configuration from `prep/values.yaml`.
 - Use the release name `myapp`.
 - Ensure the deployment is running and healthy.
