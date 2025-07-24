@@ -2,15 +2,14 @@
 set -e
 
 NAMESPACE=exam-1-task-11
-CONFIGMAP=prep/configmap.yaml
-POD=prep/pod.yaml
-NS_MANIFEST=prep/namespace.yaml
 EXPECTED_MSG="setting=advanced"
 POD_NAME=configmap-advanced-demo
 
-kubectl apply -f "$NS_MANIFEST"
-kubectl apply -f "$CONFIGMAP"
-kubectl apply -f "$POD"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
+
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
 
 # Wait for pod to be running
 for i in {1..10}; do

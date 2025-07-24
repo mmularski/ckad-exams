@@ -3,33 +3,42 @@
 **Points:** 5
 
 ## Scenario
-You need to enforce resource usage limits in a namespace using ResourceQuota and LimitRange.
+You are working in a Kubernetes cluster. Your task is to enforce resource usage limits using ResourceQuota and LimitRange.
 
 ## Preparation
 In the `prep/` directory you will find:
 - `namespace.yaml` – namespace manifest
 
-To prepare the environment, run:
-```sh
-kubectl apply -f prep/namespace.yaml
-```
-
-You must create `resourcequota.yaml`, `limitrange.yaml` and `pod.yaml` yourself as part of the solution.
+**Note:** You need to create all required manifests from scratch in the `prep/` directory.
 
 ## Requirements
 - Create a namespace named `exam-1-task-05`.
-- Create a ResourceQuota named `compute-quota` in the namespace that limits total CPU to 500m and memory to 256Mi.
-- Create a LimitRange named `default-limits` in the namespace that sets default CPU request to 100m, limit to 200m, default memory request to 64Mi, limit to 128Mi.
-- Create a Pod named `quota-demo` in the namespace using the `busybox` image (no explicit resources in pod spec).
-- The Pod should start successfully and sleep.
+- Create a ResourceQuota named `compute-quota` with the following limits:
+  - `requests.cpu`: `500m`
+  - `requests.memory`: `256Mi`
+  - `limits.cpu`: `500m`
+  - `limits.memory`: `256Mi`
+- Create a LimitRange named `default-limits` with the following defaults:
+  - Default CPU limit: `200m`
+  - Default memory limit: `128Mi`
+  - Default CPU request: `100m`
+  - Default memory request: `64Mi`
+- Create a Pod that uses the default resource settings.
 
 ## Deliverables
-- `resourcequota.yaml`, `limitrange.yaml`, `pod.yaml` in the `prep/` directory.
-- A Pod that runs with default resource requests/limits.
+- All required manifests in the `prep/` directory.
+- A Pod that runs with default resource requests and limits.
 - Pass the validation described below.
 
 ## Validation
 To validate your solution, run:
+
 ```sh
 ./answer/validation.sh
 ```
+
+## Notes
+- The ResourceQuota should limit total CPU and memory usage.
+- The LimitRange should set default resource requests and limits for containers.
+- The Pod should start successfully with the default resource settings.
+- The ResourceQuota and LimitRange must have the exact names and specifications listed above.

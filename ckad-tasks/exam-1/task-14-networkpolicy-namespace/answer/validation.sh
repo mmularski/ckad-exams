@@ -3,19 +3,14 @@ set -e
 
 NS_A=ns-a
 NS_B=ns-b
-NS_A_MANIFEST=prep/namespace-a.yaml
-NS_B_MANIFEST=prep/namespace-b.yaml
-POD_A=prep/pod-a.yaml
-POD_B=prep/pod-b.yaml
-NP=prep/networkpolicy.yaml
 BACKEND=backend
 CLIENT=client
 
-kubectl apply -f "$NS_A_MANIFEST"
-kubectl apply -f "$NS_B_MANIFEST"
-kubectl apply -f "$POD_A"
-kubectl apply -f "$POD_B"
-kubectl apply -f "$NP"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
+
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
 
 # Wait for pods to be running
 for ns in $NS_A $NS_B; do

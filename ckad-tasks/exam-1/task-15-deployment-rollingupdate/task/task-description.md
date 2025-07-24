@@ -3,34 +3,38 @@
 **Points:** 5
 
 ## Scenario
-You need to perform a rolling update of a Deployment and verify the update strategy.
+You are working in a Kubernetes cluster. Your task is to perform a rolling update of a Deployment.
 
 ## Preparation
 In the `prep/` directory you will find:
 - `namespace.yaml` – namespace manifest
 
-To prepare the environment, run:
-```sh
-kubectl apply -f prep/namespace.yaml
-```
-
-You must create `deployment.yaml` yourself as part of the solution.
+**Note:** You need to create all required manifests from scratch in the `prep/` directory.
 
 ## Requirements
 - Create a namespace named `exam-1-task-15`.
-- Create a Deployment named `rolling-demo` in that namespace with 3 replicas of the `nginx:1.21` image.
-- The Deployment must use the label `app: rolling-demo`.
-- Set the rolling update strategy to allow max 1 unavailable pod and max 2 surge pods during update.
-- Update the Deployment to use image `nginx:1.22` and perform a rolling update.
-- The Deployment should remain available during the update.
+- Create a Deployment named `rolling-demo` with the following configuration:
+  - 3 replicas
+  - Image: `nginx:1.22`
+  - Rolling update strategy:
+    - `maxUnavailable`: `1`
+    - `maxSurge`: `2`
+- The Deployment should remain available during the update process.
 
 ## Deliverables
-- `deployment.yaml` in the `prep/` directory (final version with `nginx:1.22`).
+- All required manifests in the `prep/` directory.
 - A Deployment that uses the correct rolling update strategy.
 - Pass the validation described below.
 
 ## Validation
 To validate your solution, run:
+
 ```sh
 ./answer/validation.sh
 ```
+
+## Notes
+- Use nginx image for the Deployment.
+- Set appropriate rolling update strategy parameters.
+- The Deployment should remain available during updates.
+- The deployment name, replicas, image, and strategy parameters must match the requirements above.

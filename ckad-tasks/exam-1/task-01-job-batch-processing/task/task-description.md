@@ -3,34 +3,39 @@
 **Points:** 5
 
 ## Scenario
-You need to run a one-time batch job in Kubernetes that processes a data file and prints the result.
+You are working in a Kubernetes cluster. Your task is to create a Job that processes data and prints the result.
 
 ## Preparation
 In the `prep/` directory you will find:
 - `namespace.yaml` – namespace manifest
 
-To prepare the environment, run:
-```sh
-kubectl apply -f prep/namespace.yaml
-```
-
-You must create `job.yaml` yourself as part of the solution.
+**Note:** You need to create all required manifests from scratch in the `prep/` directory.
 
 ## Requirements
 - Create a namespace named `exam-1-task-01`.
-- Create a Job named `data-processor` in that namespace.
-- The Job should use the `busybox` image and run the command: `cat /data/input.txt | tr a-z A-Z`
-- Mount a ConfigMap as a volume at `/data` with a key `input.txt` containing the text `hello exam-1`.
-- The Job should print the uppercase version of the file and then exit.
+- Create a ConfigMap named `data-input` in that namespace with the following content:
+  - Key: `input.txt`
+  - Value: `hello exam-1`
+- Create a Job named `data-processor` that:
+  - Uses the `busybox` image
+  - Mounts the above ConfigMap as a volume at `/data`
+  - Reads `/data/input.txt`, converts its content to uppercase, and prints the result
+- The Job should print the processed result and then exit.
 
 ## Deliverables
-- `job.yaml` and `configmap.yaml` in the `prep/` directory.
-- A Job that prints `HELLO EXAM-1` in its logs.
+- All required manifests in the `prep/` directory.
+- A Job that prints the processed data in its logs.
 - Pass the validation described below.
 
 ## Validation
 To validate your solution, run:
+
 ```sh
-kubectl logs job/data-processor -n exam-1-task-01
-# Output should contain: HELLO EXAM-1
+./answer/validation.sh
 ```
+
+## Notes
+- The Job should process the data and exit successfully.
+- Use a ConfigMap to provide the input data.
+- The output in the Job logs must be exactly: `HELLO EXAM-1`.
+- The resource names and ConfigMap content must match the requirements above.

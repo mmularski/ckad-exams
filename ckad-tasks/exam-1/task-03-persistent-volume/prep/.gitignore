@@ -1,4 +1,7 @@
 # Student solutions - DO NOT COMMIT
-pv.yaml
-pvc.yaml
-pod.yaml
+*.yaml
+*.yml
+*.json
+*.sh
+*.md
+!namespace.yaml

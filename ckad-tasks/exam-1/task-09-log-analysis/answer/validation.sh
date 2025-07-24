@@ -2,14 +2,29 @@
 set -e
 
 NAMESPACE=exam-1-task-09
-POD=prep/pod.yaml
-NS_MANIFEST=prep/namespace.yaml
 POD_NAME=logger-demo
 ERROR_FILE=prep/error.txt
 EXPECTED="ERROR: Failed to connect to database"
 
-kubectl apply -f "$NS_MANIFEST"
-kubectl apply -f "$POD"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
+
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
+
+# Check pod configuration
+POD_IMAGE=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.containers[0].image}')
+POD_CONTAINER_NAME=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.containers[0].name}')
+
+if [ "$POD_IMAGE" != "busybox" ]; then
+  echo "❌ [FAIL] Pod should use busybox image, got: $POD_IMAGE"
+  exit 1
+fi
+
+if [ "$POD_CONTAINER_NAME" != "busybox" ]; then
+  echo "❌ [FAIL] Pod container should be named 'busybox', got: $POD_CONTAINER_NAME"
+  exit 1
+fi
 
 # Wait for pod to be running
 for i in {1..10}; do
@@ -36,7 +51,7 @@ fi
 
 if grep -Fxq "$EXPECTED" "$ERROR_FILE"; then
   echo ""
-  echo "✅ [PASS] error.txt contains the correct error line."
+  echo "✅ [PASS] Pod is correctly configured and error.txt contains the correct error line."
   echo ""
 
   # Clean up resources on success

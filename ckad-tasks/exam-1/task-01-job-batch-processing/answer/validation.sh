@@ -2,15 +2,14 @@
 set -e
 
 NAMESPACE=exam-1-task-01
-JOB=prep/job.yaml
-CONFIGMAP=prep/configmap.yaml
-NS_MANIFEST=prep/namespace.yaml
 EXPECTED_MSG="HELLO EXAM-1"
 JOB_NAME=data-processor
 
-kubectl apply -f "$NS_MANIFEST"
-kubectl apply -f "$CONFIGMAP"
-kubectl apply -f "$JOB"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
+
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
 
 # Wait for job to complete
 for i in {1..10}; do

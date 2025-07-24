@@ -3,34 +3,38 @@
 **Points:** 5
 
 ## Scenario
-You need to use an init container to prepare data for the main application container.
+You are working in a Kubernetes cluster. Your task is to create a Pod that uses an init container to prepare data.
 
 ## Preparation
 In the `prep/` directory you will find:
 - `namespace.yaml` – namespace manifest
 
-To prepare the environment, run:
-```sh
-kubectl apply -f prep/namespace.yaml
-```
-
-You must create `pod.yaml` yourself as part of the solution.
+**Note:** You need to create all required manifests from scratch in the `prep/` directory.
 
 ## Requirements
 - Create a namespace named `exam-1-task-08`.
-- Create a Pod named `init-demo` in that namespace.
-- The Pod should have:
-  - An init container that writes the text `init ready` to `/data/status.txt`.
-  - A main container (busybox) that reads and prints the contents of `/data/status.txt` and then sleeps.
-- Use an `emptyDir` volume mounted at `/data` in both containers.
+- Create a Pod that uses an init container to prepare data for the main container.
+- The Pod should have the following configuration:
+  - Init container named `init` using `busybox` image
+  - Main container named `main` using `busybox` image
+  - Shared `emptyDir` volume named `data`
+- The init container should write data to a shared volume.
+- The main container should read and display the data prepared by the init container.
 
 ## Deliverables
-- `pod.yaml` in the `prep/` directory.
+- All required manifests in the `prep/` directory.
 - A Pod that demonstrates the use of an init container.
 - Pass the validation described below.
 
 ## Validation
 To validate your solution, run:
+
 ```sh
 ./answer/validation.sh
 ```
+
+## Notes
+- Use an `emptyDir` volume shared between containers.
+- The init container should write data to the volume.
+- The main container should read and display the data.
+- The containers must have the exact names and images listed above.

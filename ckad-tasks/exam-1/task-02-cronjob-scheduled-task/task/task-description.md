@@ -3,34 +3,36 @@
 **Points:** 5
 
 ## Scenario
-You need to schedule a recurring task in Kubernetes that runs every minute and appends the current date to a file in an emptyDir volume.
+You are working in a Kubernetes cluster. Your task is to create a CronJob that runs on a schedule.
 
 ## Preparation
 In the `prep/` directory you will find:
 - `namespace.yaml` – namespace manifest
 
-To prepare the environment, run:
-```sh
-kubectl apply -f prep/namespace.yaml
-```
-
-You must create `cronjob.yaml` yourself as part of the solution.
+**Note:** You need to create all required manifests from scratch in the `prep/` directory.
 
 ## Requirements
 - Create a namespace named `exam-1-task-02`.
-- Create a CronJob named `date-writer` in that namespace.
-- The CronJob should use the `busybox` image and run the command: `date >> /data/dates.txt`
-- Use an `emptyDir` volume mounted at `/data`.
-- The CronJob should run every minute.
+- Create a CronJob named `date-writer` in that namespace with the following configuration:
+  - Schedule: `* * * * *` (every minute)
+  - Image: `busybox`
+  - Uses an `emptyDir` volume
+  - Appends data to a file in the shared volume
+- The CronJob should run on schedule and complete successfully.
 
 ## Deliverables
-- `cronjob.yaml` in the `prep/` directory.
-- A CronJob that appends the current date to `/data/dates.txt` on each run.
+- All required manifests in the `prep/` directory.
+- A CronJob that runs on schedule and completes successfully.
 - Pass the validation described below.
 
 ## Validation
 To validate your solution, run:
+
 ```sh
-kubectl get cronjob -n exam-1-task-02
-# Check that jobs are being created and pods complete successfully.
+./answer/validation.sh
 ```
+
+## Notes
+- The CronJob should run every minute and append data to a file.
+- Use an `emptyDir` volume for temporary storage.
+- The CronJob must have the exact name, schedule, and configuration listed above.

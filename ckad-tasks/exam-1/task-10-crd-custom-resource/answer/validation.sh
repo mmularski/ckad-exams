@@ -2,19 +2,49 @@
 set -e
 
 NAMESPACE=exam-1-task-10
-CRD=prep/crd.yaml
-CR=prep/custom-resource.yaml
-NS_MANIFEST=prep/namespace.yaml
 CRD_NAME=messages.exam.local
 CR_NAME=hello-msg
 
-kubectl apply -f "$NS_MANIFEST"
-kubectl apply -f "$CRD"
-kubectl wait --for=condition=Established crd/$CRD_NAME --timeout=30s
-kubectl apply -f "$CR"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
 
-# Check CRD exists
-kubectl get crd $CRD_NAME
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
+
+# Wait for CRD to be established
+kubectl wait --for=condition=Established crd/$CRD_NAME --timeout=30s
+
+# Check CRD configuration
+CRD_GROUP=$(kubectl get crd $CRD_NAME -o jsonpath='{.spec.group}')
+CRD_SCOPE=$(kubectl get crd $CRD_NAME -o jsonpath='{.spec.scope}')
+CRD_KIND=$(kubectl get crd $CRD_NAME -o jsonpath='{.spec.names.kind}')
+CRD_PLURAL=$(kubectl get crd $CRD_NAME -o jsonpath='{.spec.names.plural}')
+CRD_SINGULAR=$(kubectl get crd $CRD_NAME -o jsonpath='{.spec.names.singular}')
+
+if [ "$CRD_GROUP" != "exam.local" ]; then
+  echo "❌ [FAIL] CRD group should be exam.local, got: $CRD_GROUP"
+  exit 1
+fi
+
+if [ "$CRD_SCOPE" != "Namespaced" ]; then
+  echo "❌ [FAIL] CRD scope should be Namespaced, got: $CRD_SCOPE"
+  exit 1
+fi
+
+if [ "$CRD_KIND" != "Message" ]; then
+  echo "❌ [FAIL] CRD kind should be Message, got: $CRD_KIND"
+  exit 1
+fi
+
+if [ "$CRD_PLURAL" != "messages" ]; then
+  echo "❌ [FAIL] CRD plural should be messages, got: $CRD_PLURAL"
+  exit 1
+fi
+
+if [ "$CRD_SINGULAR" != "message" ]; then
+  echo "❌ [FAIL] CRD singular should be message, got: $CRD_SINGULAR"
+  exit 1
+fi
 
 # Check custom resource exists
 kubectl get message $CR_NAME -n $NAMESPACE
@@ -23,7 +53,7 @@ kubectl get message $CR_NAME -n $NAMESPACE
 TEXT=$(kubectl get message $CR_NAME -n $NAMESPACE -o jsonpath='{.spec.text}')
 if [ "$TEXT" == "Hello CRD!" ]; then
   echo ""
-  echo "✅ [PASS] Custom resource created and has correct text."
+  echo "✅ [PASS] CustomResourceDefinition and custom resource are correctly configured."
   echo ""
 
   # Clean up resources on success

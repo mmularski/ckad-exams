@@ -2,20 +2,17 @@
 set -e
 
 NAMESPACE=exam-1-task-06
-DEPLOYMENT=prep/deployment.yaml
-SERVICE=prep/service.yaml
-INGRESS=prep/ingress.yaml
-NS_MANIFEST=prep/namespace.yaml
 DEPLOYMENT_NAME=web-deployment
 SERVICE_NAME=web-service
 INGRESS_NAME=web-ingress
 EXPECTED_REPLICAS=2
 EXPECTED_PORT=80
 
-kubectl apply -f "$NS_MANIFEST"
-kubectl apply -f "$DEPLOYMENT"
-kubectl apply -f "$SERVICE"
-kubectl apply -f "$INGRESS"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
+
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
 
 # Wait for deployment to be ready
 kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE --timeout=30s
@@ -42,24 +39,48 @@ else
   exit 1
 fi
 
-# Check ingress exists and routes to service
-if kubectl get ingress $INGRESS_NAME -n $NAMESPACE | grep -q web.exam.local; then
-  echo ""
-  echo "✅ [PASS] Ingress exists and has correct host."
-  echo ""
+# Check Ingress configuration
+INGRESS_HOST=$(kubectl get ingress $INGRESS_NAME -n $NAMESPACE -o jsonpath='{.spec.rules[0].host}')
+INGRESS_PATH=$(kubectl get ingress $INGRESS_NAME -n $NAMESPACE -o jsonpath='{.spec.rules[0].http.paths[0].path}')
+INGRESS_PATH_TYPE=$(kubectl get ingress $INGRESS_NAME -n $NAMESPACE -o jsonpath='{.spec.rules[0].http.paths[0].pathType}')
+INGRESS_SERVICE=$(kubectl get ingress $INGRESS_NAME -n $NAMESPACE -o jsonpath='{.spec.rules[0].http.paths[0].backend.service.name}')
+INGRESS_PORT=$(kubectl get ingress $INGRESS_NAME -n $NAMESPACE -o jsonpath='{.spec.rules[0].http.paths[0].backend.service.port.number}')
 
-  # Clean up resources on success
-  echo "🧹 Cleaning up resources..."
-  kubectl delete ingress "$INGRESS_NAME" -n "$NAMESPACE" --ignore-not-found=true
-  kubectl delete service "$SERVICE_NAME" -n "$NAMESPACE" --ignore-not-found=true
-  kubectl delete deployment "$DEPLOYMENT_NAME" -n "$NAMESPACE" --ignore-not-found=true
-  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
-  echo "✨ Cleanup completed!"
-
-  exit 0
-else
-  echo ""
-  echo "❌ [FAIL] Ingress not found or host incorrect."
-  echo ""
+if [ "$INGRESS_HOST" != "web.exam.local" ]; then
+  echo "❌ [FAIL] Ingress host should be web.exam.local, got: $INGRESS_HOST"
   exit 1
 fi
+
+if [ "$INGRESS_PATH" != "/" ]; then
+  echo "❌ [FAIL] Ingress path should be /, got: $INGRESS_PATH"
+  exit 1
+fi
+
+if [ "$INGRESS_PATH_TYPE" != "Prefix" ]; then
+  echo "❌ [FAIL] Ingress pathType should be Prefix, got: $INGRESS_PATH_TYPE"
+  exit 1
+fi
+
+if [ "$INGRESS_SERVICE" != "web-service" ]; then
+  echo "❌ [FAIL] Ingress should route to web-service, got: $INGRESS_SERVICE"
+  exit 1
+fi
+
+if [ "$INGRESS_PORT" != "80" ]; then
+  echo "❌ [FAIL] Ingress should route to port 80, got: $INGRESS_PORT"
+  exit 1
+fi
+
+echo ""
+echo "✅ [PASS] Ingress is correctly configured and routes traffic to the service."
+echo ""
+
+# Clean up resources on success
+echo "🧹 Cleaning up resources..."
+kubectl delete ingress "$INGRESS_NAME" -n "$NAMESPACE" --ignore-not-found=true
+kubectl delete service "$SERVICE_NAME" -n "$NAMESPACE" --ignore-not-found=true
+kubectl delete deployment "$DEPLOYMENT_NAME" -n "$NAMESPACE" --ignore-not-found=true
+kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+echo "✨ Cleanup completed!"
+
+exit 0

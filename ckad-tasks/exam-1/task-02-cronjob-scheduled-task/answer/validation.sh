@@ -2,12 +2,34 @@
 set -e
 
 NAMESPACE=exam-1-task-02
-CRONJOB=answer/solution.yaml
-NS_MANIFEST=prep/namespace.yaml
 CRONJOB_NAME=date-writer
 
-kubectl apply -f "$NS_MANIFEST"
-kubectl apply -f "$CRONJOB"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
+
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
+
+# Check CronJob schedule
+SCHEDULE=$(kubectl get cronjob "$CRONJOB_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.schedule}')
+if [ "$SCHEDULE" != "* * * * *" ]; then
+  echo "❌ [FAIL] CronJob schedule should be '* * * * *', got: $SCHEDULE"
+  exit 1
+fi
+
+# Check if CronJob uses busybox image
+IMAGE=$(kubectl get cronjob "$CRONJOB_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.jobTemplate.spec.template.spec.containers[0].image}')
+if [ "$IMAGE" != "busybox" ]; then
+  echo "❌ [FAIL] CronJob should use busybox image, got: $IMAGE"
+  exit 1
+fi
+
+# Check if CronJob has emptyDir volume
+VOLUME_TYPE=$(kubectl get cronjob "$CRONJOB_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.jobTemplate.spec.template.spec.volumes[0].emptyDir}')
+if [ -z "$VOLUME_TYPE" ]; then
+  echo "❌ [FAIL] CronJob should have emptyDir volume"
+  exit 1
+fi
 
 # Wait for at least one job to be created
 for i in {1..10}; do
@@ -29,7 +51,7 @@ LAST_JOB=$(kubectl get jobs -n "$NAMESPACE" -l job-name | grep $CRONJOB_NAME | t
 STATUS=$(kubectl get job "$LAST_JOB" -n "$NAMESPACE" -o jsonpath='{.status.succeeded}')
 if [ "$STATUS" == "1" ]; then
   echo ""
-  echo "✅ [PASS] CronJob created a job that completed successfully."
+  echo "✅ [PASS] CronJob is correctly configured and created a job that completed successfully."
   echo ""
 
   # Clean up resources on success

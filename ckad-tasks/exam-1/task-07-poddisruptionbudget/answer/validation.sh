@@ -2,16 +2,15 @@
 set -e
 
 NAMESPACE=exam-1-task-07
-DEPLOYMENT=prep/deployment.yaml
-PDB=prep/pdb.yaml
-NS_MANIFEST=prep/namespace.yaml
 DEPLOYMENT_NAME=ha-app
 PDB_NAME=ha-pdb
 EXPECTED_REPLICAS=3
 
-kubectl apply -f "$NS_MANIFEST"
-kubectl apply -f "$DEPLOYMENT"
-kubectl apply -f "$PDB"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
+
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
 
 # Wait for deployment to be ready
 kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE --timeout=30s
@@ -27,24 +26,29 @@ else
   exit 1
 fi
 
-# Check PDB exists and minAvailable is 2
+# Check PDB configuration
 MIN_AVAIL=$(kubectl get pdb $PDB_NAME -n $NAMESPACE -o jsonpath='{.spec.minAvailable}')
-if [ "$MIN_AVAIL" == "2" ]; then
-  echo ""
-  echo "✅ [PASS] PDB minAvailable is set to 2."
-  echo ""
+PDB_SELECTOR=$(kubectl get pdb $PDB_NAME -n $NAMESPACE -o jsonpath='{.spec.selector.matchLabels.app}')
 
-  # Clean up resources on success
-  echo "🧹 Cleaning up resources..."
-  kubectl delete poddisruptionbudget "$PDB_NAME" -n "$NAMESPACE" --ignore-not-found=true
-  kubectl delete deployment "$DEPLOYMENT_NAME" -n "$NAMESPACE" --ignore-not-found=true
-  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
-  echo "✨ Cleanup completed!"
-
-  exit 0
-else
-  echo ""
-  echo "❌ [FAIL] PDB minAvailable is not set to 2."
-  echo ""
+if [ "$MIN_AVAIL" != "2" ]; then
+  echo "❌ [FAIL] PDB minAvailable should be 2, got: $MIN_AVAIL"
   exit 1
 fi
+
+if [ "$PDB_SELECTOR" != "ha-app" ]; then
+  echo "❌ [FAIL] PDB selector should match app=ha-app, got: $PDB_SELECTOR"
+  exit 1
+fi
+
+echo ""
+echo "✅ [PASS] PodDisruptionBudget is correctly configured with minAvailable=2 and proper selector."
+echo ""
+
+# Clean up resources on success
+echo "🧹 Cleaning up resources..."
+kubectl delete poddisruptionbudget "$PDB_NAME" -n "$NAMESPACE" --ignore-not-found=true
+kubectl delete deployment "$DEPLOYMENT_NAME" -n "$NAMESPACE" --ignore-not-found=true
+kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+echo "✨ Cleanup completed!"
+
+exit 0

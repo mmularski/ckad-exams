@@ -2,12 +2,13 @@
 set -e
 
 NAMESPACE=exam-1-task-04
-POD=prep/pod.yaml
-NS_MANIFEST=prep/namespace.yaml
 POD_NAME=secure-pod
 
-kubectl apply -f "$NS_MANIFEST"
-kubectl apply -f "$POD"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
+
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
 
 # Wait for pod to be running
 for i in {1..10}; do
@@ -24,22 +25,37 @@ if [ "$STATUS" != "Running" ]; then
   exit 1
 fi
 
-# Check pod logs for user id
-LOG=$(kubectl logs "$POD_NAME" -n "$NAMESPACE" 2>/dev/null || true)
-if echo "$LOG" | grep -q "1000"; then
-  echo "✅ [PASS] Pod runs as non-root user."
-else
-  echo ""
-  echo "❌ [FAIL] Pod does not run as non-root user."
-  echo ""
+# Check SecurityContext configuration
+RUN_AS_USER=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.containers[0].securityContext.runAsUser}')
+READ_ONLY_FS=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.containers[0].securityContext.readOnlyRootFilesystem}')
+ALLOW_PRIV_ESC=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.containers[0].securityContext.allowPrivilegeEscalation}')
+RUN_AS_NON_ROOT=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.securityContext.runAsNonRoot}')
+
+if [ "$RUN_AS_USER" != "1000" ]; then
+  echo "❌ [FAIL] Container should run as user 1000, got: $RUN_AS_USER"
   exit 1
 fi
 
-# Check securityContext
-SC=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o json | grep readOnlyRootFilesystem)
-if echo "$SC" | grep -q true; then
+if [ "$READ_ONLY_FS" != "true" ]; then
+  echo "❌ [FAIL] Container should have readOnlyRootFilesystem: true, got: $READ_ONLY_FS"
+  exit 1
+fi
+
+if [ "$ALLOW_PRIV_ESC" != "false" ]; then
+  echo "❌ [FAIL] Container should have allowPrivilegeEscalation: false, got: $ALLOW_PRIV_ESC"
+  exit 1
+fi
+
+if [ "$RUN_AS_NON_ROOT" != "true" ]; then
+  echo "❌ [FAIL] Pod should have runAsNonRoot: true, got: $RUN_AS_NON_ROOT"
+  exit 1
+fi
+
+# Check pod logs for user id
+LOG=$(kubectl logs "$POD_NAME" -n "$NAMESPACE" 2>/dev/null || true)
+if echo "$LOG" | grep -q "1000"; then
   echo ""
-  echo "✅ [PASS] Pod has read-only root filesystem."
+  echo "✅ [PASS] Pod has correct SecurityContext configuration and runs as non-root user."
   echo ""
 
   # Clean up resources on success
@@ -51,7 +67,7 @@ if echo "$SC" | grep -q true; then
   exit 0
 else
   echo ""
-  echo "❌ [FAIL] Pod does not have read-only root filesystem."
+  echo "❌ [FAIL] Pod does not run as non-root user (uid 1000)."
   echo ""
   exit 1
 fi

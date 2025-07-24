@@ -2,13 +2,46 @@
 set -e
 
 NAMESPACE=exam-1-task-08
-POD=prep/pod.yaml
-NS_MANIFEST=prep/namespace.yaml
 POD_NAME=init-demo
 EXPECTED_MSG="init ready"
 
-kubectl apply -f "$NS_MANIFEST"
-kubectl apply -f "$POD"
+echo "Applying all manifests from prep/ directory..."
+kubectl apply -f prep/
+
+# Retry in case of race conditions
+kubectl apply -f prep/ --force
+
+# Check init container configuration
+INIT_CONTAINER_NAME=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.initContainers[0].name}')
+INIT_IMAGE=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.initContainers[0].image}')
+MAIN_CONTAINER_NAME=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.containers[0].name}')
+MAIN_IMAGE=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.containers[0].image}')
+VOLUME_TYPE=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.volumes[0].emptyDir}')
+
+if [ "$INIT_CONTAINER_NAME" != "init" ]; then
+  echo "❌ [FAIL] Init container should be named 'init', got: $INIT_CONTAINER_NAME"
+  exit 1
+fi
+
+if [ "$INIT_IMAGE" != "busybox" ]; then
+  echo "❌ [FAIL] Init container should use busybox image, got: $INIT_IMAGE"
+  exit 1
+fi
+
+if [ "$MAIN_CONTAINER_NAME" != "main" ]; then
+  echo "❌ [FAIL] Main container should be named 'main', got: $MAIN_CONTAINER_NAME"
+  exit 1
+fi
+
+if [ "$MAIN_IMAGE" != "busybox" ]; then
+  echo "❌ [FAIL] Main container should use busybox image, got: $MAIN_IMAGE"
+  exit 1
+fi
+
+if [ -z "$VOLUME_TYPE" ]; then
+  echo "❌ [FAIL] Pod should have emptyDir volume"
+  exit 1
+fi
 
 # Wait for pod to be running
 for i in {1..10}; do
@@ -29,7 +62,7 @@ fi
 LOG=$(kubectl logs "$POD_NAME" -n "$NAMESPACE" 2>/dev/null || true)
 if echo "$LOG" | grep -q "$EXPECTED_MSG"; then
   echo ""
-  echo "✅ [PASS] Found expected message in pod logs."
+  echo "✅ [PASS] Init container is correctly configured and found expected message in pod logs."
   echo ""
 
   # Clean up resources on success

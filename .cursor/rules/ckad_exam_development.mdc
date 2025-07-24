@@ -11,7 +11,7 @@ alwaysApply: true
 ### **Exam Structure Requirements**
 - **15-20 tasks per exam**: Each exam must contain 15-20 tasks covering all CKAD curriculum domains
 - **Unique task sets**: Each exam must have completely different scenarios, configurations, and problem statements
-- **Progressive difficulty**: Tasks should increase in complexity within each exam (simple → medium → complex)
+- **Mixed difficulty**: Tasks should vary in complexity within each exam (simple → medium → complex)
 - **Time constraints**: Each task should be completable within 5-10 minutes under exam conditions
 - **Real-world scenarios**: Tasks must reflect actual production use cases, not theoretical examples
 
@@ -53,6 +53,8 @@ task-XX-[descriptive-name]/
 In the `prep/` directory you will find:
 - `namespace.yaml` – namespace manifest
 - [other resources as needed]
+
+**Note:** You need to create all required manifests from scratch in the `prep/` directory.
 
 ## Requirements
 - [Specific technical requirements]

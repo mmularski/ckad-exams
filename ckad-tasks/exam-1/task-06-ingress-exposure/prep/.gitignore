@@ -1,4 +1,7 @@
 # Student solutions - DO NOT COMMIT
-deployment.yaml
-service.yaml
-ingress.yaml
+*.yaml
+*.yml
+*.json
+*.sh
+*.md
+!namespace.yaml
