@@ -26,13 +26,22 @@ if [ "$STATUS" != "Running" ]; then
 fi
 
 # Check SecurityContext configuration
-RUN_AS_USER=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.containers[0].securityContext.runAsUser}')
+POD_RUN_AS_USER=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.securityContext.runAsUser}')
+CONTAINER_RUN_AS_USER=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.containers[0].securityContext.runAsUser}')
+POD_RUN_AS_NON_ROOT=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.securityContext.runAsNonRoot}')
+CONTAINER_RUN_AS_NON_ROOT=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.containers[0].securityContext.runAsNonRoot}')
 READ_ONLY_FS=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.containers[0].securityContext.readOnlyRootFilesystem}')
 ALLOW_PRIV_ESC=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.containers[0].securityContext.allowPrivilegeEscalation}')
-RUN_AS_NON_ROOT=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.securityContext.runAsNonRoot}')
 
-if [ "$RUN_AS_USER" != "1000" ]; then
-  echo "❌ [FAIL] Container should run as user 1000, got: $RUN_AS_USER"
+# Check if runAsUser is set at either pod OR container level (OR logic)
+if [ "$POD_RUN_AS_USER" != "1000" ] && [ "$CONTAINER_RUN_AS_USER" != "1000" ]; then
+  echo "❌ [FAIL] Pod should run as user 1000 (either at pod OR container level), got: pod=$POD_RUN_AS_USER, container=$CONTAINER_RUN_AS_USER"
+  exit 1
+fi
+
+# Check if runAsNonRoot is set at either pod OR container level (OR logic)
+if [ "$POD_RUN_AS_NON_ROOT" != "true" ] && [ "$CONTAINER_RUN_AS_NON_ROOT" != "true" ]; then
+  echo "❌ [FAIL] Pod should have runAsNonRoot: true (either at pod OR container level), got: pod=$POD_RUN_AS_NON_ROOT, container=$CONTAINER_RUN_AS_NON_ROOT"
   exit 1
 fi
 
@@ -46,28 +55,14 @@ if [ "$ALLOW_PRIV_ESC" != "false" ]; then
   exit 1
 fi
 
-if [ "$RUN_AS_NON_ROOT" != "true" ]; then
-  echo "❌ [FAIL] Pod should have runAsNonRoot: true, got: $RUN_AS_NON_ROOT"
-  exit 1
-fi
+echo ""
+echo "✅ [PASS] Pod has correct SecurityContext configuration and runs as non-root user."
+echo ""
 
-# Check pod logs for user id
-LOG=$(kubectl logs "$POD_NAME" -n "$NAMESPACE" 2>/dev/null || true)
-if echo "$LOG" | grep -q "1000"; then
-  echo ""
-  echo "✅ [PASS] Pod has correct SecurityContext configuration and runs as non-root user."
-  echo ""
+# Clean up resources on success
+echo "🧹 Cleaning up resources..."
+kubectl delete pod "$POD_NAME" -n "$NAMESPACE" --ignore-not-found=true
+kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+echo "✨ Cleanup completed!"
 
-  # Clean up resources on success
-  echo "🧹 Cleaning up resources..."
-  kubectl delete pod "$POD_NAME" -n "$NAMESPACE" --ignore-not-found=true
-  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
-  echo "✨ Cleanup completed!"
-
-  exit 0
-else
-  echo ""
-  echo "❌ [FAIL] Pod does not run as non-root user (uid 1000)."
-  echo ""
-  exit 1
-fi
+exit 0

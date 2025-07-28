@@ -71,16 +71,16 @@ if [ "$INGRESS_PORT" != "80" ]; then
   exit 1
 fi
 
-echo ""
+  echo ""
 echo "✅ [PASS] Ingress is correctly configured and routes traffic to the service."
-echo ""
+  echo ""
 
-# Clean up resources on success
-echo "🧹 Cleaning up resources..."
-kubectl delete ingress "$INGRESS_NAME" -n "$NAMESPACE" --ignore-not-found=true
-kubectl delete service "$SERVICE_NAME" -n "$NAMESPACE" --ignore-not-found=true
-kubectl delete deployment "$DEPLOYMENT_NAME" -n "$NAMESPACE" --ignore-not-found=true
-kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
-echo "✨ Cleanup completed!"
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  kubectl delete ingress "$INGRESS_NAME" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete service "$SERVICE_NAME" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete deployment "$DEPLOYMENT_NAME" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
 
-exit 0
+  exit 0

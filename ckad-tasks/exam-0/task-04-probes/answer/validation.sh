@@ -71,12 +71,12 @@ fi
 
 echo ""
 echo "✅ [PASS] Both readiness and liveness probes are correctly configured."
-echo ""
+  echo ""
 
-# Clean up resources on success
-echo "🧹 Cleaning up resources..."
-kubectl delete pod "$POD_NAME" -n "$NAMESPACE" --ignore-not-found=true
-kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
-echo "✨ Cleanup completed!"
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  kubectl delete pod "$POD_NAME" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
 
-exit 0
+  exit 0

@@ -5,3 +5,5 @@
 *.sh
 *.md
 !namespace.yaml
+!broken-app.yaml
+!nginx-config.yaml

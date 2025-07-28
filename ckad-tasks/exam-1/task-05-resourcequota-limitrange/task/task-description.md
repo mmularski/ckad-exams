@@ -23,7 +23,7 @@ In the `prep/` directory you will find:
   - Default memory limit: `128Mi`
   - Default CPU request: `100m`
   - Default memory request: `64Mi`
-- Create a Pod that uses the default resource settings.
+- Create a Pod named `quota-demo` that uses the default resource settings.
 
 ## Deliverables
 - All required manifests in the `prep/` directory.

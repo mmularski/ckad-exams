@@ -4,13 +4,13 @@ metadata:
   name: secure-pod
   namespace: exam-1-task-04
 spec:
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
   containers:
     - name: busybox
       image: busybox
       command: ["sh", "-c", "id -u && sleep 3600"]
       securityContext:
-        runAsUser: 1000
         readOnlyRootFilesystem: true
         allowPrivilegeEscalation: false
-  securityContext:
-    runAsNonRoot: true

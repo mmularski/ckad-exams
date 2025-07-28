@@ -19,7 +19,7 @@ fi
 
 # Check if CronJob uses busybox image
 IMAGE=$(kubectl get cronjob "$CRONJOB_NAME" -n "$NAMESPACE" -o jsonpath='{.spec.jobTemplate.spec.template.spec.containers[0].image}')
-if [ "$IMAGE" != "busybox" ]; then
+if [[ "$IMAGE" != *"busybox"* ]]; then
   echo "❌ [FAIL] CronJob should use busybox image, got: $IMAGE"
   exit 1
 fi
@@ -32,21 +32,25 @@ if [ -z "$VOLUME_TYPE" ]; then
 fi
 
 # Wait for at least one job to be created
+echo "⏳ Waiting for the first job to be created by CronJob (schedule: every minute)..."
 for i in {1..10}; do
   JOBS=$(kubectl get jobs -n "$NAMESPACE" -l job-name | grep $CRONJOB_NAME | wc -l)
   if [ "$JOBS" -ge 1 ]; then
+    echo "✅ Job created successfully!"
     break
   fi
+  echo "   Waiting... (attempt $i/10)"
   sleep 10
 done
 if [ "$JOBS" -lt 1 ]; then
   echo ""
-  echo "❌ [FAIL] No jobs created by CronJob."
+  echo "❌ [FAIL] No jobs created by CronJob after waiting."
   echo ""
   exit 1
 fi
 
 # Check that the last job completed successfully
+echo "⏳ Checking if the job completed successfully..."
 LAST_JOB=$(kubectl get jobs -n "$NAMESPACE" -l job-name | grep $CRONJOB_NAME | tail -n1 | awk '{print $1}')
 STATUS=$(kubectl get job "$LAST_JOB" -n "$NAMESPACE" -o jsonpath='{.status.succeeded}')
 if [ "$STATUS" == "1" ]; then

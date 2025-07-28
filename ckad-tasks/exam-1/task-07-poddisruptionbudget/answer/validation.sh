@@ -40,15 +40,15 @@ if [ "$PDB_SELECTOR" != "ha-app" ]; then
   exit 1
 fi
 
-echo ""
+  echo ""
 echo "✅ [PASS] PodDisruptionBudget is correctly configured with minAvailable=2 and proper selector."
-echo ""
+  echo ""
 
-# Clean up resources on success
-echo "🧹 Cleaning up resources..."
-kubectl delete poddisruptionbudget "$PDB_NAME" -n "$NAMESPACE" --ignore-not-found=true
-kubectl delete deployment "$DEPLOYMENT_NAME" -n "$NAMESPACE" --ignore-not-found=true
-kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
-echo "✨ Cleanup completed!"
+  # Clean up resources on success
+  echo "🧹 Cleaning up resources..."
+  kubectl delete poddisruptionbudget "$PDB_NAME" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete deployment "$DEPLOYMENT_NAME" -n "$NAMESPACE" --ignore-not-found=true
+  kubectl delete namespace "$NAMESPACE" --ignore-not-found=true
+  echo "✨ Cleanup completed!"
 
-exit 0
+  exit 0

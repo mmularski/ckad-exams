@@ -13,11 +13,8 @@ In the `prep/` directory you will find:
 
 ## Requirements
 - Create a namespace named `exam-1-task-07`.
-- Deploy a high-availability application with multiple replicas.
-- Create a PodDisruptionBudget named `ha-pdb` with the following configuration:
-  - `minAvailable`: `2`
-  - `selector`: should match pods with label `app=ha-app`
-- The PDB should ensure minimum availability during voluntary disruptions.
+- Create a Deployment named `ha-app` with 3 replicas using nginx image and label `app=ha-app`.
+- Create a PodDisruptionBudget named `ha-pdb` for the `ha-app` Deployment to ensure a minimum of 2 pods are always available during voluntary disruptions.
 
 ## Deliverables
 - All required manifests in the `prep/` directory.

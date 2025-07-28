@@ -19,8 +19,8 @@ In the `prep/` directory you will find:
   - Plural: `messages`
   - Singular: `message`
   - Scope: `Namespaced`
-  - Schema: should include a `spec.text` field of type `string`
-- Create a custom resource instance named `hello-msg` with `spec.text: "Hello CRD!"`
+  - Schema: should include a `text` field of type `string` in the spec section
+- Create a custom resource instance named `hello-msg` with `text` field set to `"Hello CRD!"` in the spec section
 - The CRD and resource should be properly configured.
 
 ## Deliverables

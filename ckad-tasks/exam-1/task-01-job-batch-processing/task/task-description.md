@@ -39,3 +39,4 @@ To validate your solution, run:
 - Use a ConfigMap to provide the input data.
 - The output in the Job logs must be exactly: `HELLO EXAM-1`.
 - The resource names and ConfigMap content must match the requirements above.
+- **Hint:** To convert text to uppercase, you can use the `tr` command: `tr a-z A-Z`

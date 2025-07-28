@@ -16,6 +16,7 @@ In the `prep/` directory you will find:
 - Create a Deployment named `rolling-demo` with the following configuration:
   - 3 replicas
   - Image: `nginx:1.22`
+  - Label: `app=rolling-demo`
   - Rolling update strategy:
     - `maxUnavailable`: `1`
     - `maxSurge`: `2`

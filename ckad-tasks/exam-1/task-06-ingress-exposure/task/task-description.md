@@ -11,10 +11,26 @@ In the `prep/` directory you will find:
 
 **Note:** You need to create all required manifests from scratch in the `prep/` directory.
 
+**Important:** Ingress requires an Ingress controller to be installed. If you're using minikube, you need to enable the Ingress addon:
+
+```sh
+# Enable Ingress addon in minikube
+minikube addons enable ingress
+
+# Verify Ingress controller is running
+kubectl get pods -n ingress-nginx
+
+# Wait for Ingress controller to be ready
+kubectl wait --namespace ingress-nginx \
+  --for=condition=ready pod \
+  --selector=app.kubernetes.io/component=controller \
+  --timeout=120s
+```
+
 ## Requirements
 - Create a namespace named `exam-1-task-06`.
-- Deploy a web application with multiple replicas.
-- Expose the application with a Service.
+- Create a Deployment named `web-deployment` with 2 replicas using nginx image and label `app=web`.
+- Create a Service named `web-service` that exposes the deployment on port 80 using selector `app=web`.
 - Create an Ingress named `web-ingress` with the following configuration:
   - Host: `web.exam.local`
   - Path: `/`
@@ -37,5 +53,4 @@ To validate your solution, run:
 ## Notes
 - Use nginx image for the web application.
 - The Ingress should route traffic for a specific host.
-- Assume the Ingress controller is already installed.
 - The Ingress must have the exact configuration listed above.

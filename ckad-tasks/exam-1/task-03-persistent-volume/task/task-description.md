@@ -20,8 +20,9 @@ In the `prep/` directory you will find:
 - Create a PersistentVolumeClaim named `exam1-pvc` with the following specifications:
   - Storage capacity: `1Gi`
   - Access mode: `ReadWriteOnce`
-- Create a Pod that uses the persistent storage to write data.
-- The Pod should write data to the persistent volume and remain running.
+- Create a Pod named `pv-demo` that uses the persistent storage to write data.
+- The Pod should write the text `persistent test` to the file `/data/test.txt` in the persistent volume.
+- The Pod should remain running after writing the data.
 
 ## Deliverables
 - All required manifests in the `prep/` directory.
@@ -38,4 +39,5 @@ To validate your solution, run:
 ## Notes
 - Use hostPath as the storage backend for the PersistentVolume.
 - The Pod should write data to the persistent volume and remain in Running state.
-- The PersistentVolume and PersistentVolumeClaim must have the exact names and specifications listed above.
+- The PersistentVolume, PersistentVolumeClaim, and Pod must have the exact names and specifications listed above.
+- The file must be written to the exact path `/data/test.txt` with the exact content `persistent test`.

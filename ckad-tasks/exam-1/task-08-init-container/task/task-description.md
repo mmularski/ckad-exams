@@ -13,13 +13,13 @@ In the `prep/` directory you will find:
 
 ## Requirements
 - Create a namespace named `exam-1-task-08`.
-- Create a Pod that uses an init container to prepare data for the main container.
+- Create a Pod named `init-demo` that uses an init container to prepare data for the main container.
 - The Pod should have the following configuration:
   - Init container named `init` using `busybox` image
   - Main container named `main` using `busybox` image
   - Shared `emptyDir` volume named `data`
-- The init container should write data to a shared volume.
-- The main container should read and display the data prepared by the init container.
+- The init container should write the message "init ready" to the file `/data/status.txt` in the shared volume.
+- The main container should read and display the content of `/data/status.txt` from the shared volume.
 
 ## Deliverables
 - All required manifests in the `prep/` directory.

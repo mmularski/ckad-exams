@@ -1,1 +1,24 @@
-# Complete this file according to the task requirements
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-demo
+  namespace: exam-1-task-08
+spec:
+  containers:
+  - name: main
+    image: busybox
+    command: ['sh', '-c', 'echo $(cat /data/status.txt) && sleep 3600']
+    volumeMounts:
+    - mountPath: /data
+      name: data
+  initContainers:
+  - name: init
+    image: busybox
+    command: ['sh', '-c', 'echo "init ready" > /data/status.txt']
+    volumeMounts:
+    - mountPath: /data
+      name: data
+  volumes:
+  - name: data
+    emptyDir:
+      sizeLimit: 100Mi

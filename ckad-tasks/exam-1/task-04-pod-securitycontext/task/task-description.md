@@ -13,7 +13,7 @@ In the `prep/` directory you will find:
 
 ## Requirements
 - Create a namespace named `exam-1-task-04`.
-- Create a Pod that runs with restricted security settings.
+- Create a Pod named `secure-pod` that runs with restricted security settings.
 - The Pod should run as a non-root user with a read-only root filesystem.
 - The Pod should not allow privilege escalation.
 
@@ -33,3 +33,4 @@ To validate your solution, run:
 - The Pod should run as a non-root user (uid 1000).
 - The root filesystem should be mounted read-only.
 - Privilege escalation should be disabled.
+- The Pod must have the exact name listed above.

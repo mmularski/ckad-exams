@@ -1,27 +1,28 @@
-# Log Analysis and Debugging
+# Application Debugging and Fix
 
 **Points:** 5
 
 ## Scenario
-You are working in a Kubernetes cluster. Your task is to analyze pod logs to troubleshoot an application issue.
+You are working in a Kubernetes cluster. Your task is to debug and fix a broken application that is generating error logs.
 
 ## Preparation
 In the `prep/` directory you will find:
 - `namespace.yaml` – namespace manifest
+- `broken-app.yaml` – a Pod with configuration issues
+- `nginx-config.yaml` – a ConfigMap with nginx configuration
 
-**Note:** You need to create all required manifests from scratch in the `prep/` directory.
+**Note:** You need to analyze the logs and fix the application configuration.
 
 ## Requirements
 - Create a namespace named `exam-1-task-09`.
-- Create a Pod named `logger-demo` with the following configuration:
-  - Container named `busybox` using `busybox` image
-  - Command that generates logs with different severity levels
-- Analyze the logs to identify and document error messages.
-- Create a file with the extracted error information.
+- Apply the provided `broken-app.yaml` manifest.
+- Analyze the application logs to identify the error.
+- Fix the application configuration to resolve the error.
+- Ensure the application runs without errors.
 
 ## Deliverables
 - All required manifests in the `prep/` directory.
-- A file containing the extracted error information.
+- A working application that no longer generates error logs.
 - Pass the validation described below.
 
 ## Validation
@@ -32,7 +33,4 @@ To validate your solution, run:
 ```
 
 ## Notes
-- The Pod should generate logs with INFO and ERROR levels.
-- Use `kubectl logs` to extract error messages.
-- Document the error in a file in the prep directory.
-- The Pod must have the exact name and container configuration listed above.
+- The application should run successfully after the fix.
