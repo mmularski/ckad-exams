@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-proxy-config
+  namespace: exam-1-task-13
+data:
+  nginx.conf: |
+    server {
+        listen 8080;
+        location / {
+            proxy_pass http://example.com;
+        }
+    }

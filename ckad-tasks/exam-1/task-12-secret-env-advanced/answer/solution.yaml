@@ -5,7 +5,7 @@ metadata:
   namespace: exam-1-task-12
 type: Opaque
 data:
-  ENCODED_MSG: U1VDQ0VTU0ZVTCE=
+  encoded-data: U1VDQ0VTU0ZVTCE=
 ---
 apiVersion: v1
 kind: Pod
@@ -16,10 +16,10 @@ spec:
   containers:
     - name: busybox
       image: busybox
-      command: ["sh", "-c", "echo $ENCODED_MSG | base64 -d && sleep 3600"]
+      command: ["sh", "-c", "echo $DECODED_MESSAGE && sleep 3600"]
       env:
-        - name: ENCODED_MSG
+        - name: DECODED_MESSAGE
           valueFrom:
             secretKeyRef:
               name: advanced-secret
-              key: ENCODED_MSG
+              key: encoded-data

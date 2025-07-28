@@ -5,3 +5,4 @@
 *.sh
 *.md
 !namespace.yaml
+!nginx-config.yaml

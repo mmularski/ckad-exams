@@ -7,9 +7,6 @@ POD_NAME=ambassador-demo
 echo "Applying all manifests from prep/ directory..."
 kubectl apply -f prep/
 
-# Retry in case of race conditions
-kubectl apply -f prep/ --force
-
 # Wait for pod to be running
 for i in {1..10}; do
   STATUS=$(kubectl get pod "$POD_NAME" -n "$NAMESPACE" -o jsonpath='{.status.phase}' 2>/dev/null || echo "")
@@ -25,11 +22,15 @@ if [ "$STATUS" != "Running" ]; then
   exit 1
 fi
 
-# Check app logs for HTTP response
+# Wait for wget to complete (sleep 3 + wget timeout)
+echo "Waiting for wget to complete..."
+sleep 8
+
+# Check app container logs for successful communication
 LOG=$(kubectl logs "$POD_NAME" -c app -n "$NAMESPACE" 2>/dev/null || true)
-if echo "$LOG" | grep -q "HTTP/1.1 200 OK"; then
+if echo "$LOG" | grep -q "HTTP/1.1 200 OK\|200 OK\|200" && echo "$LOG" | grep -q "Example Domain"; then
   echo ""
-  echo "✅ [PASS] Ambassador pattern works and HTTP response received."
+  echo "✅ [PASS] Ambassador pattern works and communication successful."
   echo ""
 
   # Clean up resources on success

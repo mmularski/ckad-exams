@@ -3,7 +3,7 @@
 **Points:** 5
 
 ## Scenario
-You are working in a Kubernetes cluster. Your task is to create a Pod that uses the ambassador pattern.
+You are working in a Kubernetes cluster. Your task is to create a Pod with two containers where one container acts as an ambassador/proxy for the other.
 
 ## Preparation
 In the `prep/` directory you will find:
@@ -13,15 +13,16 @@ In the `prep/` directory you will find:
 
 ## Requirements
 - Create a namespace named `exam-1-task-13`.
-- Create a Pod named `ambassador-demo` with two containers using the ambassador pattern:
-  - Main container named `app` that communicates with an external service
-  - Ambassador container that proxies traffic to example.com
-- The main container should communicate with an external service through the ambassador container.
-- The Pod should demonstrate successful communication and return HTTP 200 response.
+- Create a Pod named `ambassador-demo` with two containers:
+  - Main container named `app` that makes requests to `localhost:8080`
+  - Ambassador container named `proxy` that uses nginx to proxy traffic to external services
+- The main container should use `wget` to make a request to `localhost:8080`
+- The ambassador container should mount the `nginx-proxy-config` ConfigMap and proxy traffic to `example.com`
+- The Pod should demonstrate successful communication through the ambassador.
 
 ## Deliverables
 - All required manifests in the `prep/` directory.
-- A Pod that demonstrates the ambassador pattern.
+- A Pod that demonstrates the ambassador pattern with traffic proxying.
 - Pass the validation described below.
 
 ## Validation
@@ -32,7 +33,7 @@ To validate your solution, run:
 ```
 
 ## Notes
-- Use the ambassador pattern to proxy traffic to an external service.
-- The main container should communicate through the ambassador container.
-- The ambassador container should proxy traffic to example.com.
+- The main container communicates with the ambassador container on localhost.
+- The ambassador container forwards traffic to external services.
+- Use nginx in the ambassador container to proxy HTTP traffic.
 - The Pod must have the exact name and container configuration listed above.

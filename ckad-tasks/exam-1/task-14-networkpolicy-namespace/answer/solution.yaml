@@ -8,8 +8,9 @@ metadata:
 spec:
   containers:
     - name: backend
-      image: busybox
-      command: ["sh", "-c", "sleep 3600"]
+      image: nginx:alpine
+      ports:
+        - containerPort: 80
 ---
 apiVersion: v1
 kind: Pod
@@ -23,6 +24,20 @@ spec:
     - name: client
       image: busybox
       command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: ns-a
+spec:
+  type: ClusterIP
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

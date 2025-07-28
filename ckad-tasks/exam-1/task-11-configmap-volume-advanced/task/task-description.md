@@ -13,8 +13,12 @@ In the `prep/` directory you will find:
 
 ## Requirements
 - Create a namespace named `exam-1-task-11`.
-- Create a ConfigMap named `advanced-config` in that namespace with multiple data keys, including a key `setting` with value `advanced`.
-- Create a Pod named `configmap-advanced-demo` that mounts only the `setting` key from the ConfigMap as a file using `subPath`.
+- Create a ConfigMap named `advanced-config` in that namespace with the following data keys:
+  - `setting` with value `advanced`
+  - `debug` with value `enabled`
+  - `timeout` with value `30`
+  - `internal` with value `1`
+- Create a Pod named `configmap-advanced-demo` that mounts only the `setting` key from the ConfigMap as a file at `/config/setting`.
 - The Pod should read and display the mounted configuration data (output: `setting=advanced`).
 
 ## Deliverables
@@ -30,7 +34,6 @@ To validate your solution, run:
 ```
 
 ## Notes
-- Use subPath to mount specific files from the ConfigMap.
 - The Pod should read and display the configuration data.
 - Only mount the required files, not all ConfigMap data.
 - The resource names, ConfigMap content, and output must match the requirements above.

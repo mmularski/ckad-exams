@@ -13,9 +13,9 @@ In the `prep/` directory you will find:
 
 ## Requirements
 - Create a namespace named `exam-1-task-12`.
-- Create a Secret named `advanced-secret` in that namespace with base64-encoded data containing the value `SUCCESSFUL!`.
-- Create a Pod named `secret-advanced-demo` that reads the Secret as an environment variable and decodes it.
-- The Pod should display the decoded secret value (output: `SUCCESSFUL!`).
+- Create a Secret named `advanced-secret` in that namespace with a key named `encoded-data` containing the base64-encoded value `SUCCESSFUL!`.
+- Create a Pod named `secret-advanced-demo` that reads the Secret key `encoded-data` as an environment variable named `DECODED_MESSAGE`.
+- The Pod should display the secret value (output: `SUCCESSFUL!`).
 
 ## Deliverables
 - All required manifests in the `prep/` directory.
@@ -30,7 +30,5 @@ To validate your solution, run:
 ```
 
 ## Notes
-- The Secret should contain base64-encoded data.
-- The Pod should decode the data and display the result.
 - Use environment variables to pass the Secret data to the container.
 - The resource names, Secret content, and output must match the requirements above.

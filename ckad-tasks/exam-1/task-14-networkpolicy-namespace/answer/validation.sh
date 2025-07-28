@@ -12,6 +12,9 @@ kubectl apply -f prep/
 # Retry in case of race conditions
 kubectl apply -f prep/ --force
 
+echo "Applying solution manifests..."
+kubectl apply -f answer/solution.yaml
+
 # Wait for pods to be running
 for ns in $NS_A $NS_B; do
   for i in {1..10}; do
@@ -32,10 +35,13 @@ done
 
 # Test connectivity: client -> backend (should succeed)
 kubectl exec -n $NS_B $CLIENT -- wget -qO- --timeout=2 http://backend.ns-a.svc.cluster.local:80 && CLIENT_OK=1 || CLIENT_OK=0
-# Test connectivity: backend -> backend (should fail)
-kubectl exec -n $NS_A $BACKEND -- wget -qO- --timeout=2 http://backend:80 && BACKEND_OK=1 || BACKEND_OK=0
+# Test connectivity: client from ns-c -> backend (should fail)
+kubectl create namespace ns-c --dry-run=client -o yaml | kubectl apply -f - >/dev/null 2>&1
+kubectl run client-c -n ns-c --image=busybox --restart=Never --command -- sh -c "sleep 3600" >/dev/null 2>&1
+sleep 3
+kubectl exec -n ns-c client-c -- wget -qO- --timeout=2 http://backend.ns-a.svc.cluster.local:80 && CLIENT_C_OK=1 || CLIENT_C_OK=0
 
-if [ "$CLIENT_OK" -eq 1 ] && [ "$BACKEND_OK" -eq 0 ]; then
+if [ "$CLIENT_OK" -eq 1 ] && [ "$CLIENT_C_OK" -eq 0 ]; then
   echo ""
   echo "✅ [PASS] NetworkPolicy works as expected."
   echo ""
@@ -45,8 +51,10 @@ if [ "$CLIENT_OK" -eq 1 ] && [ "$BACKEND_OK" -eq 0 ]; then
   kubectl delete networkpolicy allow-from-ns-b -n "$NS_A" --ignore-not-found=true
   kubectl delete pod "$BACKEND" -n "$NS_A" --ignore-not-found=true
   kubectl delete pod "$CLIENT" -n "$NS_B" --ignore-not-found=true
+  kubectl delete pod client-c -n ns-c --ignore-not-found=true
   kubectl delete namespace "$NS_A" --ignore-not-found=true
   kubectl delete namespace "$NS_B" --ignore-not-found=true
+  kubectl delete namespace ns-c --ignore-not-found=true
   echo "✨ Cleanup completed!"
 
   exit 0

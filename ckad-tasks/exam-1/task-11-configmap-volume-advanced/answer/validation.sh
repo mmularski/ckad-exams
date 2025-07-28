@@ -33,6 +33,39 @@ if echo "$LOG" | grep -q "$EXPECTED_MSG"; then
   echo "✅ [PASS] Found expected message in pod logs."
   echo ""
 
+  # Check that only the 'setting' key is mounted, not other keys
+  # The setting file should exist at /config/setting
+  if kubectl exec "$POD_NAME" -n "$NAMESPACE" -- test -f /config/setting; then
+    echo "✅ [PASS] Setting file is correctly mounted at /config/setting."
+    echo ""
+  else
+    echo "❌ [FAIL] Setting file is not mounted correctly."
+    echo ""
+    exit 1
+  fi
+
+  # Check that other keys are not mounted
+  if kubectl exec "$POD_NAME" -n "$NAMESPACE" -- test -f /config/debug 2>/dev/null; then
+    echo "❌ [FAIL] Debug file should not be mounted."
+    echo ""
+    exit 1
+  fi
+
+  if kubectl exec "$POD_NAME" -n "$NAMESPACE" -- test -f /config/timeout 2>/dev/null; then
+    echo "❌ [FAIL] Timeout file should not be mounted."
+    echo ""
+    exit 1
+  fi
+
+  if kubectl exec "$POD_NAME" -n "$NAMESPACE" -- test -f /config/internal 2>/dev/null; then
+    echo "❌ [FAIL] Internal file should not be mounted."
+    echo ""
+    exit 1
+  fi
+
+  echo "✅ [PASS] Only the 'setting' key is mounted, other keys are correctly excluded."
+  echo ""
+
   # Clean up resources on success
   echo "🧹 Cleaning up resources..."
   kubectl delete pod "$POD_NAME" -n "$NAMESPACE" --ignore-not-found=true

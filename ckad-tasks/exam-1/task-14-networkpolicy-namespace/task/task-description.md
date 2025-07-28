@@ -17,6 +17,7 @@ In the `prep/` directory you will find:
 - Create a Pod named `client` in namespace `ns-b`.
 - Create a NetworkPolicy named `allow-from-ns-b` in namespace `ns-a` that allows traffic from namespace `ns-b` to the `backend` pod.
 - The NetworkPolicy should use namespace selectors.
+- The client pod communicates with the backend using CoreDNS at `backend.ns-a.svc.cluster.local:80`.
 
 ## Deliverables
 - All required manifests in the `prep/` directory.

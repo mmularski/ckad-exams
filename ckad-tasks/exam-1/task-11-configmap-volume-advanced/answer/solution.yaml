@@ -4,8 +4,10 @@ metadata:
   name: advanced-config
   namespace: exam-1-task-11
 data:
-  app.conf: "setting=advanced"
-  unused.txt: "should-not-be-mounted"
+  setting: "advanced"
+  debug: "enabled"
+  timeout: "30"
+  internal: "1"
 ---
 apiVersion: v1
 kind: Pod
@@ -16,11 +18,11 @@ spec:
   containers:
     - name: busybox
       image: busybox
-      command: ["sh", "-c", "cat /etc/app/app.conf && sleep 3600"]
+      command: ["sh", "-c", "echo 'setting='$(cat /config/setting) && sleep 3600"]
       volumeMounts:
         - name: config
-          mountPath: /etc/app/app.conf
-          subPath: app.conf
+          mountPath: /config/setting
+          subPath: setting
   volumes:
     - name: config
       configMap:
