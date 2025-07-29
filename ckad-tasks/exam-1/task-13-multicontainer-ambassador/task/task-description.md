@@ -1,6 +1,6 @@
 # Multi-Container Pod (Ambassador Pattern)
 
-**Points:** 5
+**Points:** 8
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to create a Pod with two containers where one container acts as an ambassador/proxy for the other.

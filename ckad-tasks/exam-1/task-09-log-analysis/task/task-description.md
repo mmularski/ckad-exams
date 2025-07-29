@@ -1,6 +1,6 @@
 # Application Debugging and Fix
 
-**Points:** 5
+**Points:** 8
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to debug and fix a broken application that is generating error logs.

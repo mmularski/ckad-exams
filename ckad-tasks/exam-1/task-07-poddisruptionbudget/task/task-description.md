@@ -1,6 +1,6 @@
 # PodDisruptionBudget
 
-**Points:** 5
+**Points:** 6
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to ensure high availability using a PodDisruptionBudget.

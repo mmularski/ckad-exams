@@ -1,6 +1,6 @@
 # Service Exposure
 
-**Points:** 5
+**Points:** 6
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to expose a Deployment using a Service.

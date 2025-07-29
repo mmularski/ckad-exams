@@ -1,6 +1,6 @@
 # Secret as Environment Variable (Advanced)
 
-**Points:** 5
+**Points:** 7
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to use a Secret as an environment variable with base64 encoding.

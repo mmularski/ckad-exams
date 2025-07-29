@@ -1,6 +1,6 @@
 # PersistentVolume and PersistentVolumeClaim
 
-**Points:** 5
+**Points:** 7
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to create persistent storage using PersistentVolume and PersistentVolumeClaim.

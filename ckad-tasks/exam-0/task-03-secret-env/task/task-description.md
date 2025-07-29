@@ -1,6 +1,6 @@
 # Secret as Environment Variable
 
-**Points:** 5
+**Points:** 4
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to use a Secret as an environment variable in a Pod.

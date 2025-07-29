@@ -1,6 +1,6 @@
 # ConfigMap as Volume
 
-**Points:** 5
+**Points:** 4
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to mount a ConfigMap as a volume in a Pod.

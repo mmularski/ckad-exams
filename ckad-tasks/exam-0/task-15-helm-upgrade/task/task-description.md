@@ -1,6 +1,6 @@
 # Helm Chart Upgrade
 
-**Points:** 5
+**Points:** 7
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to upgrade an existing PostgreSQL deployment using Helm with new configuration values.

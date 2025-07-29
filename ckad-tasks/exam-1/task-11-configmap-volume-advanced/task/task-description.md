@@ -1,6 +1,6 @@
 # ConfigMap as Volume (Advanced)
 
-**Points:** 5
+**Points:** 7
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to mount a ConfigMap as a volume with specific file selection.

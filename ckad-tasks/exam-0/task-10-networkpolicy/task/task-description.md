@@ -1,6 +1,6 @@
 # Advanced Networking Task: NetworkPolicy
 
-**Points:** 5
+**Points:** 7
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to restrict network access using a NetworkPolicy.

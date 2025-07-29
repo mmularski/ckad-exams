@@ -1,6 +1,6 @@
 # Readiness and Liveness Probes
 
-**Points:** 5
+**Points:** 6
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to add readiness and liveness probes to a Pod.

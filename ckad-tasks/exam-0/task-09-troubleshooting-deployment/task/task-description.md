@@ -1,6 +1,6 @@
 # Troubleshooting Deployment
 
-**Points:** 5
+**Points:** 8
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to troubleshoot and fix a broken Deployment.

@@ -1,6 +1,6 @@
 # CustomResourceDefinition (CRD)
 
-**Points:** 5
+**Points:** 8
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to define and use a custom resource.

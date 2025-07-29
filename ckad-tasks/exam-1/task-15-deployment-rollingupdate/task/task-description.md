@@ -1,6 +1,6 @@
 # Deployment Rolling Update
 
-**Points:** 5
+**Points:** 7
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to perform a rolling update of a Deployment.

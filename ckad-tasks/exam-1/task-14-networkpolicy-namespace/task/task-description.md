@@ -1,6 +1,6 @@
 # NetworkPolicy with Namespace Selector
 
-**Points:** 5
+**Points:** 7
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to create a NetworkPolicy that controls traffic between namespaces.

@@ -1,6 +1,6 @@
 # Context Switching
 
-**Points:** 5
+**Points:** 3
 
 ## Scenario
 You are working in a Kubernetes cluster with multiple namespaces. Your task is to learn how to switch between different namespaces and manage resources without constantly specifying the `-n` flag.

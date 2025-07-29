@@ -1,6 +1,6 @@
 # Init Container
 
-**Points:** 5
+**Points:** 7
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to create a Pod that uses an init container to prepare data.

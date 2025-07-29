@@ -1,6 +1,6 @@
 # RBAC and ServiceAccount
 
-**Points:** 5
+**Points:** 6
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to configure RBAC so that a ServiceAccount has limited permissions.

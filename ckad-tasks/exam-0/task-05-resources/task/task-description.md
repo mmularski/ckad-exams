@@ -1,6 +1,6 @@
 # Resource Requests and Limits
 
-**Points:** 5
+**Points:** 6
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to set resource requests and limits for a Deployment.

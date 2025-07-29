@@ -1,6 +1,6 @@
 # Pod with ConfigMap
 
-**Points:** 5
+**Points:** 4
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to create a Pod that consumes configuration data from a ConfigMap.

@@ -1,6 +1,6 @@
 # Deployment Management and Scaling
 
-**Points:** 5
+**Points:** 6
 
 ## Scenario
 You are working in a Kubernetes cluster. Your task is to create a Deployment with multiple replicas and scale it.
